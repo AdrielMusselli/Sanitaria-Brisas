@@ -85,12 +85,17 @@ CREATE TABLE pedido (
     ON DELETE CASCADE
 );
 
-
-INSERT INTO `pedido` (id_pedido, id_producto, cantidad, precio_unitario)
-VALUES
-(1, 1, 10, 350.00),      -- 10 bolsas de Cemento Portland
-(1, 3, 100, 15.00),      -- 100 ladrillos comunes
-(1, 10, 2, 180.00);      -- 2 cintas métricas
+INSERT INTO `pedido` (`id_prestamos`, `id_libro`, `id_usuario`, `fecha_prestamos`, `fecha_devolucion`) VALUES
+(1, 1, 1, '2025-03-01', '2025-03-15'),
+(2, 2, 2, '2025-03-02', '2025-03-16'),
+(3, 3, 3, '2025-03-03', '2025-03-17'),
+(4, 4, 4, '2025-03-04', '2025-03-18'),
+(5, 5, 5, '2025-03-05', '2025-03-19'),
+(6, 6, 6, '2025-03-06', '2025-03-20'),
+(7, 7, 7, '2025-03-07', '2025-03-21'),
+(8, 8, 8, '2025-03-08', '2025-03-22'),
+(9, 9, 9, '2025-03-09', '2025-03-23'),
+(10, 10, 10, '2025-03-10', '2025-03-24');
 
 COMMIT;
 
