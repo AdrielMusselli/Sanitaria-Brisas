@@ -1,0 +1,38 @@
+body {
+    background: linear-gradient(135deg, #2543af 0%, #0d0761 100%);
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+button [type="submit"], button {
+    background-color: #072e54;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+header {
+    color: white;
+    text-align: center;
+    margin-left: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    width: 100%;
+    height: 10vh;
+}
+
+footer {
+    background: linear-gradient(135deg, #2543af 0%, #0d0761 100%);
+    color: rgb(187, 186, 186);
+    padding: 10px;
+    position: relative;
+    bottom: 0px;
+    width: 100%;
+    height: 22vh;
+    margin-top: 20px;
+    
+}
+main {
+    height: 75vh;
+}

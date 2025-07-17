@@ -1,28 +1,16 @@
-div{
-    background-color: #1b5aa2;
-    border: 1px solid #ccc;
-    padding: 20px;
-    margin: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    color: rgb(187, 186, 186);
-    font-size: 16px;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    width: 300px;
+body {
+background: linear-gradient(135deg, #2543af 0%, #0d0761 100%);    font-family: Arial, sans-serif;
+    color: #333;
+    min-height: 100vh;
     margin: auto;
 }
-footer{
+
+main .rounded {
     background-color: #1b5aa2;
     color: rgb(187, 186, 186);
-    text-align: center;
-    padding: 10px;
-    position: relative;
-    bottom: 0;
-    width: 75%;
-    height: 120px;
-    margin: auto;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
 label {
     display: block;
     margin-bottom: 10px;
@@ -31,26 +19,47 @@ label {
     font-weight: 600;
     letter-spacing: 0.5px;
 }
-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 70vh;
+
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus {
+    border-color: #413b79;
+    box-shadow: 0 0 5px #413b7933;
+    background-color: #fff;
 }
-body {
-    background-color: #2543af;
-    font-family: Arial, sans-serif;
-    color: #333;
-} 
-button {
-    background-color: #072e54;
+
+button[type="submit"], button {
+    background-color: #1771cb;
     border: none;
     padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     margin-top: 10px;
+    color: #fff;
+}
+
+a {
+    color: rgb(187, 186, 186);
+    text-decoration: none;
+}
+
+a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+footer {
+    background: linear-gradient(135deg, #2543af 0%, #0d0761 100%);
+    color: rgb(187, 186, 186);
+    padding: 10px;
+    position: relative;
+    bottom: 0px;
+    width: 100%;
+    height: 22vh;
+    margin-top: 20px;
+    
 }
 header {
     color: white;
@@ -59,29 +68,5 @@ header {
     font-size: 24px;
     font-weight: bold;
     width: 100%;
-}
-a {
-    color: rgb(187, 186, 186);
-    text-decoration: none;
-}
-input[type="email"],
-input[type="password"] {
-    width: 90%;
-    padding: 10px 12px;
-    margin-bottom: 15px;
-    border: 1.5px solid #292257;
-    border-radius: 6px;
-    background-color: #f4f4fa;
-    font-size: 16px;
-    color: #292257;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
-}
-
-input[type="email"]:focus,
-input[type="password"]:focus {
-    border-color: #413b79;
-    box-shadow: 0 0 5px #413b7933;
-    background-color: #fff;
+    height: 10vh;
 }
