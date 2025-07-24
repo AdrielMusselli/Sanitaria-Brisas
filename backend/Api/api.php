@@ -1,24 +1,36 @@
 <?php
 require "../Controllers/productos.php"; 
+require "../Controllers/Pedidos.php";
+require "../controllers/Usuarios.php";
 
-$requestMethod = $_SERVER["REQUEST_METHOD"];
-$seccion = $_GET["seccion"] ?? null;
+$requestMethod = $_SERVER["REQUEST_METHOD"];    
 
-if ($requestMethod == "POST") {
-    if ($seccion == "añadirProducto") {
-        agregarProducto();
-    } else if ($seccion == "eliminarProducto") {
-        eliminarProducto();
-    } else {
-        echo "Sección POST no válida o no especificada.";
-    }
-}
 
 if ($requestMethod == "GET") {
-    if ($seccion == "productos") {
-        obtenerProducto();
-    } else {
-        echo "Sección GET no válida o no especificada.";
-    }
-}
+    $seccion = $_GET["seccion"];
+    if($seccion =="producto"){
+         obtenerProducto();
+    } else if ($seccion=="pedido"){
+        //echo "aca llamaremos al json de usuario";
+        obtenerPedido();
+    } else if ($seccion =="usuario"){
+        //echo "aca llamaremos al json de prestamos";
+        obtenerUsuario();
+    }}
+
+    if ($requestMethod == "POST") {
+    $seccion = $_GET["seccion"];
+    if($seccion =="producto"){
+         obtenerProducto();
+    } else if ($seccion=="pedido"){
+        //echo "aca llamaremos al json de usuario";
+        obtenerPedido();
+    } else if ($seccion =="usuario"){
+        //echo "aca llamaremos al json de prestamos";
+        obtenerUsuario();
+    }}
+
+
+
+
 ?>
