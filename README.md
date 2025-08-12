@@ -41,9 +41,11 @@ Esta parte contiene todos los recursos y páginas visibles para el usuario final
 * **`script/script.js`**
   Archivo JavaScript que gestiona la interacción de la página con el usuario y la comunicación con el backend.
 
-* **`style/style.css`**
+* **`style/`**
   Hoja de estilos que define la apariencia visual del sitio.
 
+  * Carpeta `categorias/` con archivos especificos (construcción, herramientas, pinturas y techos).
+  * archivos principales: `login.css`, `producto.css`, `registrarse.css`, `style.css`.
 ---
 
 ## 📌 Resumen de la Arquitectura

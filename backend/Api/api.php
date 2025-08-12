@@ -4,7 +4,7 @@ require "../Controllers/Pedidos.php";
 require "../controllers/Usuarios.php";
 
 $requestMethod = $_SERVER["REQUEST_METHOD"];    
-
+$seccion = $_GET["seccion"] ?? null;
 
 if ($requestMethod == "GET") {
     $seccion = $_GET["seccion"];
