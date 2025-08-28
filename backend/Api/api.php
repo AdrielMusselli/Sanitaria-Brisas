@@ -1,36 +1,43 @@
 <?php
+header('Content-Type: application/json');
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require "../Controllers/productos.php"; 
 require "../Controllers/Pedidos.php";
-require "../controllers/Usuarios.php";
+require "../Controllers/Usuarios.php";
 
 $requestMethod = $_SERVER["REQUEST_METHOD"];    
 $seccion = $_GET["seccion"] ?? null;
 
 if ($requestMethod == "GET") {
-    $seccion = $_GET["seccion"];
-    if($seccion =="producto"){
-         obtenerProducto();
-    } else if ($seccion=="pedido"){
-        //echo "aca llamaremos al json de usuario";
+    if ($seccion == "producto") {
+        obtenerProducto();
+    } else if ($seccion == "pedido") {
         obtenerPedido();
-    } else if ($seccion =="usuario"){
-        //echo "aca llamaremos al json de prestamos";
+    } else if ($seccion == "usuario") {
         obtenerUsuario();
-    }}
+    } else {
+        echo json_encode(["error" => "Sección inválida"]);
+    }
+}
 
-    if ($requestMethod == "POST") {
-    $seccion = $_GET["seccion"];
-    if($seccion =="producto"){
-         obtenerProducto();
-    } else if ($seccion=="pedido"){
-        //echo "aca llamaremos al json de usuario";
-        obtenerPedido();
-    } else if ($seccion =="usuario"){
-        //echo "aca llamaremos al json de prestamos";
-        obtenerUsuario();
-    }}
+if ($requestMethod == "POST") {
+    if ($seccion == "producto") {
+        // acá deberías usar los datos del POST
+        $nombre = $_POST["nombre"] ?? null;
+        $descripcion = $_POST["descripcion"] ?? null;
+        $precio = $_POST["precio"] ?? null;
+        $stock = $_POST["stock"] ?? null;
+        $categoria = $_POST["categoria"] ?? null;
 
-
-
-
+        agregarProducto($nombre, $descripcion, $precio, $stock, $categoria);
+    } else if ($seccion == "pedido") {
+        agregarPedido(...);
+    } else if ($seccion == "usuario") {
+        agregarUsuario(...);
+    } else {
+        echo json_encode(["error" => "Sección inválida"]);
+    }
+}
 ?>
