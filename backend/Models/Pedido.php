@@ -23,22 +23,27 @@ class Pedido {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function eliminar($id_pedido) {
+    // Prepara la consulta SQL para eliminar un pedido basado en su id
+    $stmt = $this->pdo->prepare("DELETE FROM pedido WHERE id_pedido = :id_pedido");
 
-public function agregar($id_pedido, $id_usuario, $fecha, $estado, $precio_total, $direccion_envio) {
-        $stmt = $this->pdo->prepare("INSERT INTO pedido (id_pedido, id_usuario, fecha, estado, precio_total, direccion_envio)
-        VALUES (:id_pedido, :id_usuario, :fecha, :estado, :precio_total, :direccion_envio)");
-
-    return $stmt->execute([
-        "id_pedido" => $id_pedido,
-        ":id_usuario" => $id_usuario,
-        ":fecha" => $fecha,
-        ":estado" => $estado,
-        ":precio_total" => $precio_total,
-        ":direccion_envio" => $direccion_envio,
-    ]);
-}
+    // Ejecuta la consulta
+    return $stmt->execute([":id_pedido" => $id_pedido]);
+    }
 
 
-    
+    public function agregar($id_pedido, $id_usuario, $fecha, $estado, $precio_total, $direccion_envio) {
+            $stmt = $this->pdo->prepare("INSERT INTO pedido (id_pedido, id_usuario, fecha, estado, precio_total, direccion_envio)
+            VALUES (:id_pedido, :id_usuario, :fecha, :estado, :precio_total, :direccion_envio)");
+
+        return $stmt->execute([
+            "id_pedido" => $id_pedido,
+            ":id_usuario" => $id_usuario,
+            ":fecha" => $fecha,
+            ":estado" => $estado,
+            ":precio_total" => $precio_total,
+            ":direccion_envio" => $direccion_envio,
+        ]);
+    }  
 }
 ?>
