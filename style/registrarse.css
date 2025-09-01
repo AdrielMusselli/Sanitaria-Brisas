@@ -1,8 +1,14 @@
+:root {
+            --primary-blue: #007bff;
+            --dark-blue: #0056b3;
+            --light-blue: #e3f2fd;
+            --accent-blue: #17a2b8;
+        }
+
 body {
-background: linear-gradient(135deg, #2543af 0%, #0d0761 100%);    font-family: Arial, sans-serif;
-    color: #333;
+     background: linear-gradient(135deg, #537da7c0, var(--light-blue) 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
-    margin: auto;
 }
 
 main .rounded {
