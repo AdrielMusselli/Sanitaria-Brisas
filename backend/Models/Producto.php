@@ -1,6 +1,7 @@
 <?php
+header('Content-Type: application/json');
 // Se importa el archivo que contiene la configuración de la base de datos, que establece la conexión
-require_once "../Config/pdo.php"; // Importar la conexión a la base de datos
+$pdo = require_once "../Config/pdo.php"; // Importar la conexión a la base de datos
 
 // Definición de la clase Libro que interactuará con la tabla 'libros' en la base de datos
 class Producto {
@@ -23,19 +24,51 @@ class Producto {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function agregar($id_producto, $nombre, $categoria, $precio, $stock) {
-        $stmt = $this->pdo->prepare("INSERT INTO producto (id_producto, nombre, categoria, precio, stock)
-            VALUES (:nombre, :descripcion, :precio, :stock, :categoria)");
+    public function agregar($data) {
+        $stmt = $this->pdo->prepare("INSERT INTO producto (nombre, categoria, precio, descripcion, stock) VALUES (:nombre, :categoria, :precio, :descripcion, :stock)");
+        $result = $stmt->execute([
+            ':nombre' => $data['nombre'],
+            ':categoria' => $data['categoria'],
+            ':precio' => $data['precio'],
+            ':descripcion' => $data['descripcion'],
+            ':stock' => $data['stock']
+        ]);
+        return $result;
+    }   
+}
 
-        return $stmt->execute([
-            "id_producto" => $nombreProducto,
-            "nombre" => $descripcionProducto,
-            "catergoria" => $precioProducto,
-            "precio" => $stockProducto,
-            "stock" => $categoriaProducto
+try {
+    $input = file_get_contents('php://input');
+    $data = json_decode($input, true);
+
+    if (!$data) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Datos JSON inválidos o vacíos'
+        ]);
+        exit;
+    }
+
+    // Crear instancia y agregar producto
+    $producto = new Producto($pdo);
+    $resultado = $producto->agregar($data);
+
+    if ($resultado) {
+        echo json_encode([
+            'success' => true,
+            'message' => 'Producto agregado correctamente'
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Error al insertar en la base de datos'
         ]);
     }
 
-    
+} catch (Exception $e) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error del servidor: ' . $e->getMessage()
+    ]);
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 require "../Models/Producto.php"; // Importar el modelo
 
 $productoModel = new Producto($pdo); // Instancia del modelo
