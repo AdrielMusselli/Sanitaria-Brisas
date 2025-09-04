@@ -1,19 +1,20 @@
 <?php
-require "../Models/Usuario.php"; // Importar el modelo
+header('Content-Type: application/json');
+require __DIR__ . "/../Models/Usuario.php";
 
-$usuarioModel = new Usuario ($pdo);// Instancia del modelo
+$usuarioModel = new Usuario($pdo);
 
 function obtenerUsuario() {
     global $usuarioModel;
     echo json_encode($usuarioModel->obtenerTodos());
 }
 
-function agregarUsuario($id_usuario, $nombre, $email, $telefono, $contraseña) {
+function agregarUsuario($data) {
     global $usuarioModel;
-    if ($usuarioModel->agregar($id_usuario, $nombre, $email, $telefono, $contraseña)) {
-        echo json_encode(["message" => "producto agregado"]);
-    } else {
-        echo json_encode(["error" => "Error al agregar el producto"]);
-    }
+    $resultado = $usuarioModel->agregar($data);
+    echo json_encode([
+        "success" => $resultado,
+        "message" => $resultado ? "Usuario agregado correctamente" : "Error al agregar usuario"
+    ]);
 }
 ?>

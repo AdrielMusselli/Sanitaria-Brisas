@@ -21,7 +21,7 @@ function renderTable(data, tableId) {
 // función para pedir datos a la API
 async function fetchData(seccion, tableId) {
   try {
-    const response = await fetch(`http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=${seccion}`);
+    const response = await fetch(`http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=${seccion}`);
     const data = await response.json();
     renderTable(data, tableId);
   } catch (error) {
