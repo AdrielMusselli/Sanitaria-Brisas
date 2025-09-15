@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Panel de Administración</title>
   <link rel="stylesheet" href="../admin_panel/style.css">
+  <script src="./admin.js" defer></script>
 </head>
 <body>
   <!-- Navbar -->
@@ -15,19 +16,34 @@
     </ul>
   </nav>
   
-  <h1>Agregar Producto</h1>
+  <h1>Agregar</h1> 
+
+  <select id="tabla" name="tablas" onchange="cambiarFormulario(this.value)">
+    <option value="Producto">Productos</option>
+    <option value="Pedido">Pedidos</option>
+    <option value="Usuario">Usuarios</option>
+  </select>
+
   <form id="form-producto">
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required>
+    <label for="campo1" id="label1">Nombre:</label>
+    <input type="text" id="campo1" name="campo1" required>
 
-    <label for="precio">Precio:</label>
-    <input type="number" id="precio" name="precio" step="0.01" required>
+    <label for="campo2" id="label2">Categoría:</label>
+    <input type="text" id="campo2" name="campo2" required>
 
-    <label for="stock">Stock:</label>
-    <input type="number" id="stock" name="stock" required>
+    <label for="campo3" id="label3">Precio:</label>
+    <input type="text" id="campo3" name="campo3" required>
+
+    <label for="campo4" id="label4">Stock:</label>
+    <input type="number" id="campo4" name="campo4" step="0.01" required>
+
+    <label for="campo5" id="label5">Monto:</label>
+    <input type="number" id="campo5" name="campo5" required>
 
     <button type="submit">Agregar</button>
   </form>
+
+
 
   <h1>Usuarios</h1>
   <table id="tabla-usuarios"></table>
@@ -38,7 +54,6 @@
   <h1>Pedidos</h1>
   <table id="tabla-pedidos"></table>
 
-  <!-- Enlaza tu script -->
-  <script src="../admin_panel/script.js"></script>
+
 </body>
 </html>
