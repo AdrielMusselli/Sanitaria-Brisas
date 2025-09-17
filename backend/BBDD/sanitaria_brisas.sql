@@ -80,11 +80,8 @@ CREATE TABLE `producto` (
   `categoria` varchar(100) DEFAULT NULL,
   `precio` decimal(10,2) NOT NULL,
   `stock` int(11) NOT NULL
-<<<<<<< HEAD
   `descripcion` text(500) NOT NULL,
 
-=======
->>>>>>> 9a69d8a6feb536c8506a9fba890f5f97e903e020
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

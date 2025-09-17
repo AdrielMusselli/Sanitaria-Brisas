@@ -1,0 +1,270 @@
+:root {
+    --primary-blue: #007bff;
+    --dark-blue: #0056b3;
+    --light-blue: #e3f2fd;
+    --accent-blue: #17a2b8;
+}
+
+body {
+    background: linear-gradient(135deg, #537da7c0, var(--light-blue) 100%);
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+.navbar {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%) !important;
+    box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+    height: auto;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.8rem;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+}
+
+.navbar-brand span {
+    background: linear-gradient(45deg, #fff, #e3f2fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 0.2rem;
+    position: relative;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+.search-input {
+    border: none !important;
+    border-radius: 25px 0 0 25px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.95) !important;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    background: white !important;
+}
+
+.btn-search {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: none !important;
+    border-radius: 0 25px 25px 0 !important;
+    color: var(--primary-blue) !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.3s ease;
+}
+
+.btn-search:hover {
+    background: white !important;
+    color: var(--dark-blue) !important;
+    transform: scale(1.05);
+}
+.cart-badge {
+    font-size: 0.7rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+#cart-link:hover .cart-badge {
+    animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+    0%, 20%, 60%, 100% { transform: translate(-50%, -50%) translateY(0); }
+    40% { transform: translate(-50%, -50%) translateY(-10px); }
+    80% { transform: translate(-50%, -50%) translateY(-5px); }
+}
+
+main {
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.dropdown-menu {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.2);
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 0.5rem;
+}
+
+.dropdown-item:hover {
+    background: var(--light-blue);
+    color: var(--dark-blue);
+    transform: translateX(5px);
+}
+
+.dropdown-item i {
+    width: 20px;
+    color: var(--primary-blue);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 991px) {
+    main {
+        margin-top: 10px;
+    }
+    .navbar-nav .nav-link {
+        padding: 0.75rem 1rem;
+    }
+    .search-input {
+        min-width: 200px;
+    }
+    .navbar-nav.d-flex.flex-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        margin-top: 1rem;
+    }
+    .navbar-nav.d-flex.flex-row .nav-link {
+        margin: 0.25rem 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.5rem;
+    }
+    form.d-flex {
+        min-width: auto !important;
+        width: 100%;
+        margin: 1rem 0;
+    }
+}
+
+
+footer {
+    color: rgb(187, 186, 186);
+    padding: 10px;
+    position: relative;
+    bottom: 0px;
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+}
+
+.bg-categorias,
+.bg-categorias td,
+.bg-categorias th {
+    background-color: #242526 !important;
+    border-bottom: none !important;
+}
+
+.bg-categorias a {
+    color: #d4d2d2 !important;
+    text-decoration: none;
+}
+
+.bg-categorias td {
+    border-radius: 12px;
+    background-color: #2e2e2f !important;
+    margin-bottom: 8px;
+}
+
+.bf-categorias td:hover{
+   transform: translateY(-5px);
+}
+
+.bg-categorias {
+    border-collapse: separate !important;
+    border-spacing: 0 5px !important;    
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s;
+  padding: 15px;
+  width: 300px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #3b3c3d;
+}
+
+.card-content {
+  padding: 1px;
+}
+
+.card-title {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.card-text {
+  font-size: 0.95em;
+  color: #555;
+}
+
+.card-button {
+  display: inline-block;
+  margin-top: 0px;
+  padding: 8px 12px;
+  background: #042b55;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.card-button:hover {
+  background: #04458b;
+}
+
+.form-input::placeholder {
+    color: #e4e8eb;
+    opacity: 1;     
+}
+
