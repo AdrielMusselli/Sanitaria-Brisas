@@ -3,65 +3,41 @@ header('Content-Type: application/json');
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-$pdo = require __DIR__ . "/../Config/pdo.php";
+require "../Controllers/productos.php"; 
+require "../Controllers/Pedidos.php";
+require "../Controllers/Usuarios.php";
 
-require __DIR__ . "/../Controllers/Productos.php";
-require __DIR__ . "/../Controllers/Pedidos.php";
-require __DIR__ . "/../Controllers/Usuarios.php";
-
-$requestMethod = $_SERVER["REQUEST_METHOD"];
+$requestMethod = $_SERVER["REQUEST_METHOD"];    
 $seccion = $_GET["seccion"] ?? null;
 
-switch ($seccion) {
+if ($requestMethod == "GET") {
+    if ($seccion == "producto") {
+        obtenerProducto();
+    } else if ($seccion == "pedido") {
+        obtenerPedido();
+    } else if ($seccion == "usuario") {
+        obtenerUsuario();
+    } else {
+        echo json_encode(["error" => "Sección inválida"]);
+    }
+}
 
-    case "producto":
-        if ($requestMethod == "GET") {
-            obtenerProducto();
-        } elseif ($requestMethod == "POST") {
-            $input = json_decode(file_get_contents("php://input"), true);
-            if (!$input) {
-                echo json_encode(["success" => false, "message" => "Datos JSON inválidos o vacíos"]);
-                exit;
-            }
-            agregarProducto($input);
-        }
-        break;
+if ($requestMethod == "POST") {
+    if ($seccion == "producto") {
+        // acá deberías usar los datos del POST
+        $nombre = $_POST["nombre"] ?? null;
+        $descripcion = $_POST["descripcion"] ?? null;
+        $precio = $_POST["precio"] ?? null;
+        $stock = $_POST["stock"] ?? null;
+        $categoria = $_POST["categoria"] ?? null;
 
-    case "pedido":
-        if ($requestMethod == "GET") {
-            obtenerPedido();
-        } elseif ($requestMethod == "POST") {
-            $input = json_decode(file_get_contents("php://input"), true);
-            if (!$input) {
-                echo json_encode(["success" => false, "message" => "Datos JSON inválidos o vacíos"]);
-                exit;
-            }
-            agregarPedido($input);
-        } elseif ($requestMethod == "DELETE") {
-            $id = $_GET["id_pedido"] ?? null;
-            if ($id) {
-                eliminarPedido($id);
-            } else {
-                echo json_encode(["success" => false, "message" => "ID de pedido requerido"]);
-            }
-        }
-        break;
-
-    case "usuario":
-        if ($requestMethod == "GET") {
-            obtenerUsuario();
-        } elseif ($requestMethod == "POST") {
-            $input = json_decode(file_get_contents("php://input"), true);
-            if (!$input) {
-                echo json_encode(["success" => false, "message" => "Datos JSON inválidos o vacíos"]);
-                exit;
-            }
-            agregarUsuario($input);
-        }
-        break;
-
-    default:
-        echo json_encode(["success" => false, "message" => "Sección no válida"]);
-        break;
+        agregarProducto($nombre, $descripcion, $precio, $stock, $categoria);
+    } else if ($seccion == "pedido") {
+        agregarPedido(...);
+    } else if ($seccion == "usuario") {
+        agregarUsuario(...);
+    } else {
+        echo json_encode(["error" => "Sección inválida"]);
+    }
 }
 ?>

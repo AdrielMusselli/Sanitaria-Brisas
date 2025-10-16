@@ -1,20 +1,19 @@
 <?php
-header('Content-Type: application/json');
-require __DIR__ . "/../Models/Pedido.php";
+require "../Models/Pedido.php"; // Importar el modelo
 
-$pedidoModel = new Pedido($pdo);
+$pedidoModel = new Pedido ($pdo);// Instancia del modelo
 
 function obtenerPedido() {
     global $pedidoModel;
     echo json_encode($pedidoModel->obtenerTodos());
 }
 
-function agregarPedido($data) {
+function agregarPedido($id_pedido, $id_usuario, $fecha, $estado, $precio_total, $direccion_envio) {
     global $pedidoModel;
-    $resultado = $pedidoModel->agregar($data);
-    echo json_encode([
-        "success" => $resultado,
-        "message" => $resultado ? "Pedido agregado correctamente" : "Error al agregar pedido"
-    ]);
+    if ($pedidoModel->agregar($id_pedido, $id_usuario, $fecha, $estado, $precio_total, $direccion_envio)) {
+        echo json_encode(["message" => "producto agregado"]);
+    } else {
+        echo json_encode(["error" => "Error al agregar el producto"]);
+    }
 }
 ?>

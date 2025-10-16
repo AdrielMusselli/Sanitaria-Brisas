@@ -1,29 +1,28 @@
 <?php
-// clase Pedido que maneja las operaciones relacionadas con los pedidos
+// Se importa el archivo que contiene la configuración de la base de datos, que establece la conexión
+require_once "../Config/pdo.php"; // Importar la conexión a la base de datos
+
+// Definición de la clase Libro que interactuará con la tabla 'libros' en la base de datos
 class Pedido {
-    private $pdo;
+    private $pdo;  // Declaración de una propiedad privada para almacenar la conexión PDO
 
-    // Constructor que recibe la conexión PDO
+    // El constructor recibe el objeto $pdo (conexión a la base de datos) y lo asigna a la propiedad $this->pdo
     public function __construct($pdo) {
-        $this->pdo = $pdo;
+        $this->pdo = $pdo;  // Asigna la conexión PDO a la propiedad de la clase
     }
 
-    // Método para obtener todos los pedidos
+    // Método para obtener todos los productos de la base de datos
     public function obtenerTodos() {
+        // Prepara la consulta SQL para seleccionar todos los registros de la tabla 'productos'
         $stmt = $this->pdo->prepare("SELECT * FROM pedido");
+
+        // Ejecuta la consulta
         $stmt->execute();
-<<<<<<< HEAD
         
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Devuelve todos los resultados como un array asociativo
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function eliminar($id_pedido) {
-    // Prepara la consulta SQL para eliminar un pedido basado en su id
-    $stmt = $this->pdo->prepare("DELETE FROM pedido WHERE id_pedido = :id_pedido");
-
-    // Ejecuta la consulta
-    return $stmt->execute([":id_pedido" => $id_pedido]);
-    }
 
 public function agregar($id_pedido, $id_usuario, $fecha, $estado, $precio_total, $direccion_envio) {
         $stmt = $this->pdo->prepare("INSERT INTO pedido (id_pedido, id_usuario, fecha, estado, precio_total, direccion_envio)
@@ -38,27 +37,8 @@ public function agregar($id_pedido, $id_usuario, $fecha, $estado, $precio_total,
         ":direccion_envio" => $direccion_envio,
     ]);
 }
-=======
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
 
-    // Método para agregar un nuevo pedido
-    public function agregar($data) {
-        $stmt = $this->pdo->prepare(
-            "INSERT INTO pedido (id_pedido, id_usuario, fecha, estado, precio_total, direccion_envio)
-             VALUES (:id_pedido, :id_usuario, :fecha, :estado, :precio_total, :direccion_envio)"
-        );
 
-        return $stmt->execute([
-            ":id_pedido"        => $data["id_pedido"],
-            ":id_usuario"       => $data["id_usuario"],
-            ":fecha"            => $data["fecha"],
-            ":estado"           => $data["estado"],
-            ":precio_total"     => $data["precio_total"],
-            ":direccion_envio"  => $data["direccion_envio"]
-        ]);
-    }
->>>>>>> 0a0d93423e22c93f314f6125e05b6a64635b64ad
+    
 }
-
 ?>

@@ -1,20 +1,20 @@
 <?php
 header('Content-Type: application/json');
-require __DIR__ . "/../Models/Producto.php";
+require "../Models/Producto.php"; // Importar el modelo
 
-$productoModel = new Producto($pdo);
+$productoModel = new Producto($pdo); // Instancia del modelo
 
 function obtenerProducto() {
     global $productoModel;
     echo json_encode($productoModel->obtenerTodos());
 }
 
-function agregarProducto($data) {
+function agregarProducto($nombreProducto, $descripcionProducto, $precioProducto, $stockProducto, $categoriaProducto) {
     global $productoModel;
-    $resultado = $productoModel->agregar($data);
-    echo json_encode([
-        "success" => $resultado,
-        "message" => $resultado ? "Producto agregado correctamente" : "Error al agregar producto"
-    ]);
+    if ($productoModel->agregar($nombreProducto, $descripcionProducto, $precioProducto, $stockProducto, $categoriaProducto)) {
+        echo json_encode(["message" => "producto agregado"]);
+    } else {
+        echo json_encode(["error" => "Error al agregar el producto"]);
+    }
 }
 ?>
