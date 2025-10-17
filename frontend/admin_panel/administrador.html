@@ -4,35 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="../admin_panel/style.css">
     <script src="../admin_panel/admin.js" defer></script>
 </head>
 <body>
-    <header>
-                <h1 class="text-center">Gestion de productos</h1>
-    </header>
-    <main class="container">
-        <form id="productoForm" method="post" class="mb-4">
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre del producto</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" required placeholder="Ingrese el nombre del producto">
-            </div>
-              <div class="mb-3">
-                <label for="descripcion" class="form-label">Descripcion del producto</label>
-                <input type="text" class="form-control" id="descripcion" name="descripcion" required placeholder="Ingrese una descripcion del producto">
-            </div>
-            <div class="mb-3">
-                <label for="precio" class="form-label">Precio</label>
-                <input type="number" class="form-control" id="precio" name="precio" required placeholder="Ingrese el precio del producto">
-            </div>
-             <div class="mb-3">
-                <label for="categoria" class="form-label">Categoria</label>
-                <input type="text" class="form-control" id="categoria" name="categoria" required placeholder="Ingrese la categoria del producto">
-            </div>
-            <div class="mb-3">
-                <label for="stock" class="form-label">Stock</label>
-                <input type="number" class="form-control" id="stock" name="stock" required placeholder="Ingresa el stock del producto">
-            </div>
-            <button type="submit" class="btn btn-primary">Agregar producto</button>
-    </main>
+    <div id="lista-pedidos"></div>
+
+    <div id="lista-productos"></div>
+
+    <div id="lista-usuarios"></div>   
+</body>
 </html>
