@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 require "../Controllers/productos.php"; 
 require "../Controllers/Pedidos.php";
 require "../Controllers/Usuarios.php";
+require "../Controllers/logins.php";
 
 $requestMethod = $_SERVER["REQUEST_METHOD"];    
 $seccion = $_GET["seccion"] ?? null;
@@ -17,6 +18,8 @@ if ($requestMethod == "GET") {
         obtenerPedido();
     } else if ($seccion == "usuario") {
         obtenerUsuario();
+    } else  if ($seccion == "login")  {
+        obtenerLogin();
     } else {
         echo json_encode(["error" => "Sección inválida"]);
     }
@@ -31,7 +34,7 @@ if ($requestMethod == "POST") {
         $stock = $_POST["stock"] ?? null;
         $categoria = $_POST["categoria"] ?? null;
 
-        agregarProducto($nombre, $descripcion, $precio, $stock, $categoria);
+        agregarProducto($nombre, $categoria, $precio, $stock);
     } else if ($seccion == "pedido") {
         agregarPedido($id_pedido, $id_usuario, $fecha, $precio_total, $direccion_envio);
     } else if ($seccion == "usuario") {

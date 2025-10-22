@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(form);
 
     try {
-      const res = await fetch('../backend/Models/login.php', {
+      const res = await fetch('../../backend/Api/api.php', {
         method: 'POST',
         body: formData,
         credentials: 'include' // 🔑 para enviar/recibir cookies de sesión

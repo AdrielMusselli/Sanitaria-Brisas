@@ -9,9 +9,9 @@ function obtenerProducto() {
     echo json_encode($productoModel->obtenerTodos());
 }
 
-function agregarProducto($nombreProducto, $descripcionProducto, $precioProducto, $stockProducto, $categoriaProducto) {
+function agregarProducto($nombre, $categoria, $precio, $stock) {
     global $productoModel;
-    if ($productoModel->agregar($nombreProducto, $descripcionProducto, $precioProducto, $stockProducto, $categoriaProducto)) {
+    if ($productoModel->agregarProducto($nombre, $categoria, $precio, $stock)) {
         echo json_encode(["message" => "producto agregado"]);
     } else {
         echo json_encode(["error" => "Error al agregar el producto"]);

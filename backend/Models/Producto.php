@@ -22,5 +22,20 @@ class Producto {
         // Devuelve todos los resultados como un array asociativo
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }   
+
+    // Método para agregar un nuevo producto a la base de datos
+    public function agregarProducto($nombre, $categoria, $precio, $stock) {
+        // Prepara la consulta SQL para insertar un nuevo registro en la tabla 'productos'
+        $stmt = $this->pdo->prepare("INSERT INTO producto (nombre, categoria, precio, stock) VALUES (:nombre, :categoria, :precio, :stock)");
+
+        // Vincula los parámetros de la consulta con los valores proporcionados
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':categoria', $categoria);
+        $stmt->bindParam(':precio', $precio);
+        $stmt->bindParam(':stock', $stock);
+
+        // Ejecuta la consulta y devuelve true si tuvo éxito, o false en caso contrario
+        return $stmt->execute();
+    }
 }
 ?>

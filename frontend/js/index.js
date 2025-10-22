@@ -1,30 +1,4 @@
-async function obtenerPedidos() {
-  try {
-    const response = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=pedido");
-    
-    // Verificamos si la respuesta HTTP es válida
-    if (!response.ok) {
-      throw new Error(`Error HTTP: ${response.status}`);
-    }
 
-    const data = await response.json();
-    console.log("Pedidos recibidos:", data);
-
-    // Si querés mostrarlos en una tabla o lista, podés hacerlo así:
-    const contenedor = document.getElementById("lista-pedidos");
-    if (contenedor) {
-      contenedor.innerHTML = "";
-      data.forEach(pedido => {
-        const item = document.createElement("li");
-        item.textContent = `ID: ${pedido.id_pedido} | Usuario: ${pedido.id_usuario} | Estado: ${pedido.estado}`;
-        contenedor.appendChild(item);
-      });
-    }
-
-  } catch (error) {
-    console.error("Error al obtener los pedidos:", error);
-  }
-}
 
 async function obtenerProductos() {
   try {
@@ -39,51 +13,57 @@ async function obtenerProductos() {
     console.log("Productos recibidos:", data);
 
     // Si querés mostrarlos en una tabla o lista, podés hacerlo así:
-    const contenedor = document.getElementById("lista-productos");
-    if (contenedor) {
-      contenedor.innerHTML = "";
-      data.forEach(producto => {
-        const item = document.createElement("li");
-        item.textContent = `ID: ${producto.id_producto} | Nombre: ${producto.nombre} | Categoria: ${producto.categoria} | Precio: ${producto.precio} | Stock: ${producto.stock}`;
-        contenedor.appendChild(item);
-      });
-    }
+   const contenedor = document.getElementById("lista-productos");
+
+if (contenedor) {
+  contenedor.innerHTML = "";
+
+  data.forEach(producto => {
+    // Columna (grid de Bootstrap)
+    const col = document.createElement("div");
+    col.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3", "mb-4");
+
+    // Card dentro de la columna
+    const card = document.createElement("div");
+    card.classList.add("card", "h-100");
+    card.style.width = "18rem";
+
+    const imagen = producto.imagen
+      ? producto.imagen
+      : "../assets/pintura.jpeg"; // imagen por defecto
+
+    // Contenido de la card
+    card.innerHTML = `
+      <div class="card-body">
+        <a href="../paginas/producto.html" class="text-decoration-none text-dark">
+          <div class="card-content text-center">
+            <img src="${imagen}" alt="${producto.nombre}" class="img-fluid mb-3 rounded">
+            <h3 class="card-title">${producto.nombre}</h3>
+            <h5 class="card-price">$${producto.precio}</h5>
+            <p class="card-text">${producto.descripcion}</p>
+            <button id="agregarCarrito" class="btn btn-primary mt-2">Agregar al carrito</button>
+          </div>
+        </a>
+      </div>
+    `;
+
+    // Agregar la card dentro de la columna
+    col.appendChild(card);
+
+    // Agregar la columna al contenedor principal
+    contenedor.appendChild(col);
+  });
+}
+
 
   } catch (error) {
     console.error("Error al obtener los productos:", error);
   }
 }
 
-async function obtenerUsuarios() {
-  try {
-    const response = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=usuario");
 
-    // Verificamos si la respuesta HTTP es válida
-    if (!response.ok) {
-      throw new Error(`Error HTTP: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log("Usuarios recibidos:", data);
-
-    // Si querés mostrarlos en una tabla o lista, podés hacerlo así:
-    const contenedor = document.getElementById("lista-usuarios");
-    if (contenedor) {
-      contenedor.innerHTML = "";
-      data.forEach(usuario => {
-        const item = document.createElement("li");
-        item.textContent = `ID: ${usuario.id_usuario} | Nombre: ${usuario.nombre} | Email: ${usuario.email} | Rol: ${usuario.rol}`;
-        contenedor.appendChild(item);
-      });
-    }
-
-  } catch (error) {
-    console.error("Error al obtener los usuarios:", error);
-  }
-}
   
 
 // Ejecutar al cargar la página
-document.addEventListener("DOMContentLoaded", obtenerPedidos);
 document.addEventListener("DOMContentLoaded", obtenerProductos);
-document.addEventListener("DOMContentLoaded", obtenerUsuarios);
+

@@ -7,11 +7,31 @@
     <link rel="stylesheet" href="../admin_panel/style.css">
     <script src="../admin_panel/admin.js" defer></script>
 </head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Producto</title>
+</head>
 <body>
-    <div id="lista-pedidos"></div>
+    <h1>Agregar Producto</h1>
 
-    <div id="lista-productos"></div>
+    <form action="http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=producto" method="POST">
+        <label for="nombre">Nombre del producto:</label><br>
+        <input type="text" id="nombre" name="nombre" required><br><br>
 
-    <div id="lista-usuarios"></div>   
+        <label for="categoria">categoria:</label><br>
+        <textarea id="categoria" name="categoria" required></textarea><br><br>
+
+        <label for="precio">Precio:</label><br>
+        <input type="number" step="0.01" id="precio" name="precio" required><br><br>
+
+        <label for="stock">Stock:</label><br>
+        <input type="number" id="stock" name="stock" required><br><br>
+
+        <button type="submit">Guardar Producto</button>
+    </form>
 </body>
+</html>
+
 </html>

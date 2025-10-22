@@ -1,31 +1,32 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Se importa el archivo que contiene la configuración de la base de datos
+require "../Config/pdo.php";
 
-session_start();
-header('Content-Type: application/json');
+class Login {
+    private $pdo;
 
-$pdo = require_once __DIR__ . '/../Config/pdo.php';
-
-$email = $_POST['email'] ?? '';
-$password = $_POST['password'] ?? '';
-
-try {
-    $stmt = $pdo->prepare("SELECT * FROM usuario WHERE email = :email");
-    $stmt->execute([':email' => $email]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($user && password_verify($password, $user['contraseña'])) {
-        $_SESSION['usuario'] = $email;
-        echo json_encode(['success' => true, 'message' => 'Login exitoso']);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Email o contraseña incorrectos']);
+    public function __construct($pdo) {
+        $this->pdo = $pdo;
     }
 
-} catch (Exception $e) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Error del servidor: ' . $e->getMessage()
-    ]);
+    // Método para obtener todos los usuarios
+    public function obtenerTodos() {
+        $stmt = $this->pdo->prepare("SELECT * FROM usuario");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Método para agregar un nuevo usuario
+    public function agregar($id_usuario, $nombre, $email, $telefono, $contraseña) {
+        $stmt = $this->pdo->prepare("INSERT INTO usuario (id_usuario, nombre, email, telefono, contraseña)
+                                     VALUES (:id_usuario, :nombre, :email, :telefono, :contraseña)");
+        return $stmt->execute([
+            ":id_usuario" => $id_usuario,
+            ":nombre" => $nombre,
+            ":email" => $email,
+            ":telefono" => $telefono,
+            ":contraseña" => $contraseña
+        ]);
+    }
 }
+?>

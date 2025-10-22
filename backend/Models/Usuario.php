@@ -25,16 +25,17 @@ class Usuario {
 
 
 public function agregar($id_usuario, $nombre, $email, $telefono, $contraseña) {
-        $stmt = $this->pdo->prepare("INSERT INTO pedido (id_usuario, nombre, email, telefono, contraseña)
+        // Insertar en la tabla 'usuario'
+        $stmt = $this->pdo->prepare("INSERT INTO usuario (id_usuario, nombre, email, telefono, contraseña)
         VALUES (:id_usuario, :nombre, :email, :telefono, :contraseña)");
 
-    return $stmt->execute([
-        ":id_usuario" => $id_usuario,
-        ":nombre" => $nombre,
-        ":email" => $email,
-        ":telefono" => $telefono,
-        ":contraseña" => $contraseña,
-    ]);
+        return $stmt->execute([
+            ":id_usuario" => $id_usuario,
+            ":nombre" => $nombre,
+            ":email" => $email,
+            ":telefono" => $telefono,
+            ":contraseña" => $contraseña,
+        ]);
 }
 
 
