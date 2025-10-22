@@ -33,9 +33,9 @@ if ($requestMethod == "POST") {
 
         agregarProducto($nombre, $descripcion, $precio, $stock, $categoria);
     } else if ($seccion == "pedido") {
-        agregarPedido(...);
+        agregarPedido($id_pedido, $id_usuario, $fecha, $precio_total, $direccion_envio);
     } else if ($seccion == "usuario") {
-        agregarUsuario(...);
+        agregarUsuario($id_usuario, $nombre, $email, $direccion, $telefono, $contrasena);
     } else {
         echo json_encode(["error" => "Sección inválida"]);
     }
