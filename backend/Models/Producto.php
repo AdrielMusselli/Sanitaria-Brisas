@@ -21,18 +21,26 @@ class Producto {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }   
 
-    // Método para agregar un nuevo producto a la base de datos
-    public function agregarProducto($nombre, $categoria, $precio, $stock) {
+     // Método para agregar un nuevo producto a la base de datos
+    public function agregarProducto($nombre, $categoria, $precio, $stock, $descripcion) {
         // Prepara la consulta SQL para insertar un nuevo registro en la tabla 'productos'
-        $stmt = $this->pdo->prepare("INSERT INTO producto (nombre, categoria, precio, stock) VALUES (:nombre, :categoria, :precio, :stock)");
+        $stmt = $this->pdo->prepare("INSERT INTO producto (nombre, categoria, precio, stock, descripcion) VALUES (:nombre, :categoria, :precio, :stock, :descripcion)");
 
         // Vincula los parámetros de la consulta con los valores proporcionados
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':categoria', $categoria);
         $stmt->bindParam(':precio', $precio);
         $stmt->bindParam(':stock', $stock);
+        $stmt->bindParam(':descripcion', $descripcion);
 
         // Ejecuta la consulta y devuelve true si tuvo éxito, o false en caso contrario
+        return $stmt->execute();
+    }
+
+    // Método para eliminar un producto
+    public function eliminarProducto($id) {
+        $stmt = $this->pdo->prepare("DELETE FROM producto WHERE id_producto = :id");
+        $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
 }

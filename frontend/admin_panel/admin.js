@@ -11,11 +11,11 @@ document.querySelectorAll(".nav-link").forEach((link) => {
 
   document.getElementById("productoForm").addEventListener("submit", agregarProducto)
 
-  API_URL = "http://localhost/Sanitaria-brisas/backend/Api/api.php";
+  const API_URL = "http://localhost/Sanitaria-brisas/backend/Api/api.php";
 
 async function obtenerPedidos() {
   try {
-    const response = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=pedido");
+    const response = await fetch("http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=pedido");
     
     // Verificamos si la respuesta HTTP es válida
     if (!response.ok) {
@@ -43,8 +43,7 @@ async function obtenerPedidos() {
 
 async function obtenerProductos() {
   try {
-    const response = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=producto");
-
+    const response = await fetch(`${API_URL}?seccion=producto`);
     // Verificamos si la respuesta HTTP es válida
     if (!response.ok) {
       throw new Error(`Error HTTP: ${response.status}`);
@@ -52,16 +51,23 @@ async function obtenerProductos() {
 
     const data = await response.json();
     console.log("Productos recibidos:", data);
-    renderizarProductos(data);
+
+    if (Array.isArray(data)) {
+      renderizarProductos(data);
+    } else {
+      console.error("Formato de respuesta inválido:", data);
+      alert("Error: Los datos recibidos no tienen el formato esperado");
+    }
 
   } catch (error) {
     console.error("Error al obtener los productos:", error);
+    alert("Error al obtener los productos");
   }
 }
 function renderizarProductos(data) {
   const tbody = document.querySelector("#tablaProductos tbody")
 
-  if (productos.length === 0) {
+  if (data.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6" class="text-center">No hay productos</td></tr>'
     return
   }
@@ -70,13 +76,13 @@ function renderizarProductos(data) {
     .map(
       (producto) => `
         <tr>
-          <td>${producto.id}</td>
+          <td>${producto.id_producto}</td>
           <td>${producto.nombre}</td>
           <td>${producto.categoria}</td>
           <td>$${Number.parseFloat(producto.precio).toFixed(2)}</td>
-          <td>${producto.descripcion}</td>
+          <td>${producto.descripcion || ''}</td>
           <td>
-            <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${producto.id})">
+            <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${producto.id_producto})">
               <i class="fas fa-trash"></i>
             </button>
           </td>
@@ -85,11 +91,53 @@ function renderizarProductos(data) {
     )
     .join("")
 }
+async function eliminarProducto(id) {
+  if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+    return;
+  }
+
+  try {
+    console.log('Eliminando producto con ID:', id);
+    const urlString = `${API_URL}?seccion=producto&id=${id}`;
+    console.log('URL de eliminación:', urlString);
+
+    const response = await fetch(urlString, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    let rawText = await response.text();
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch (jsonError) {
+      console.error('Respuesta cruda del backend:', rawText);
+      throw new Error('Respuesta del servidor no es JSON válido.');
+    }
+
+    if (!response.ok) {
+      throw new Error(data.message || `Error HTTP: ${response.status}`);
+    }
+
+    if (data.success) {
+      alert("Producto eliminado exitosamente");
+      obtenerProductos();
+    } else {
+      throw new Error(data.message || "Error al eliminar el producto");
+    }
+  } catch (error) {
+    console.error("Error al eliminar el producto:", error);
+    alert(error.message || "Error al eliminar el producto");
+  }
+}
+
 async function agregarProducto(e) {
   e.preventDefault()
 
   const formData = new FormData()
-  formData.append("action", "agregarProducto")
+  formData.append("seccion", "producto")
   formData.append("nombre", document.getElementById("nombre").value)
   formData.append("descripcion", document.getElementById("descripcion").value)
   formData.append("precio", document.getElementById("precio").value)
@@ -98,58 +146,33 @@ async function agregarProducto(e) {
   
 
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetch(API_URL + "?seccion=producto", {
       method: "POST",
       body: formData,
     })
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
 
     const data = await response.json()
 
     if (data.success) {
       alert("Producto agregado exitosamente")
       document.getElementById("productoForm").reset()
-      cargarProductos()
-      mostrarSeccion("productos")
+       obtenerProductos() // Actualizamos la lista de productos
+      mostrarSeccion("productos") // Volvemos a la sección de productos
     } else {
       alert(data.message || "Error al agregar producto")
     }
   } catch (error) {
     console.error("Error:", error)
-    alert("Error de conexión con el servidor")
-  }
-}
-
-async function eliminarProducto(id) {
-  if (!confirm("¿Estás seguro de eliminar este producto?")) {
-    return
-  }
-
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `action=eliminarProducto&id=${id}`,
-    })
-
-    const data = await response.json()
-
-    if (data.success) {
-      alert("Producto eliminado exitosamente")
-      cargarProductos()
-    } else {
-      alert(data.message || "Error al eliminar producto")
-    }
-  } catch (error) {
-    console.error("Error:", error)
-    alert("Error de conexión con el servidor")
+    alert("Error al agregar el producto")
   }
 }
 
 async function obtenerUsuarios() {
   try {
-    const response = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=usuario");
+    const response = await fetch("http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=usuario");
 
     // Verificamos si la respuesta HTTP es válida
     if (!response.ok) {
