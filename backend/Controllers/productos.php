@@ -9,12 +9,21 @@ function obtenerProducto() {
     echo json_encode($productoModel->obtenerTodos());
 }
 
-function agregarProducto($nombre, $categoria, $precio, $stock) {
+function agregarProducto($nombre, $categoria, $precio, $stock, $descripcion) {
     global $productoModel;
-    if ($productoModel->agregarProducto($nombre, $categoria, $precio, $stock)) {
-        echo json_encode(["message" => "producto agregado"]);
+    if ($productoModel->agregarProducto($nombre, $categoria, $precio, $stock, $descripcion)) {
+        echo json_encode(["success" => true, "message" => "Producto agregado exitosamente"]);
     } else {
-        echo json_encode(["error" => "Error al agregar el producto"]);
+        echo json_encode(["success" => false, "message" => "Error al agregar el producto"]);
+    }
+}
+
+function eliminarProducto($id) {
+    global $productoModel;
+    if ($productoModel->eliminarProducto($id)) {
+        echo json_encode(["success" => true, "message" => "Producto eliminado exitosamente"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Error al eliminar el producto"]);
     }
 }
 ?>
