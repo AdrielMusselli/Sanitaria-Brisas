@@ -36,7 +36,7 @@ if ($requestMethod == "POST") {
 
         agregarProducto($nombre, $categoria, $precio, $stock);
     } else if ($seccion == "pedido") {
-        agregarPedido($id_pedido, $id_usuario, $fecha, $precio_total, $direccion_envio);
+        agregarPedido($id_pedido, $id_usuario, $fecha, $estado, $precio_total, $direccion_envio);
     } else if ($seccion == "usuario") {
         agregarUsuario($id_usuario, $nombre, $email, $direccion, $telefono, $contrasena);
     } else {

@@ -1,8 +1,6 @@
 <?php
-// Se importa el archivo que contiene la configuración de la base de datos, que establece la conexión
-require "../Config/pdo.php"; // Importar la conexión a la base de datos
+require_once "../Config/pdo.php"; // Importar la conexión a la base de datos
 
-// Definición de la clase Producto que interactuará con la tabla 'productos' en la base de datos
 class Producto {
     private $pdo;  // Declaración de una propiedad privada para almacenar la conexión PDO
 
