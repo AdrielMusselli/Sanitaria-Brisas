@@ -2,7 +2,7 @@
 
 async function obtenerProductos() {
   try {
-    const response = await fetch("http://localhost/Sanitaria-brisas-3/backend/Api/api.php?seccion=producto");
+    const response = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=producto");
 
     // Verificamos si la respuesta HTTP es válida
     if (!response.ok) {

@@ -11,11 +11,11 @@ document.querySelectorAll(".nav-link").forEach((link) => {
 
   document.getElementById("productoForm").addEventListener("submit", agregarProducto)
 
-  API_URL = "http://localhost/Sanitaria-brisas-3/backend/Api/api.php";
+  API_URL = "http://localhost/Sanitaria-brisas/backend/Api/api.php";
 
 async function obtenerPedidos() {
   try {
-    const response = await fetch("http://localhost/Sanitaria-brisas-3/backend/Api/api.php?seccion=pedido");
+    const response = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=pedido");
     
     // Verificamos si la respuesta HTTP es válida
     if (!response.ok) {
@@ -43,7 +43,7 @@ async function obtenerPedidos() {
 
 async function obtenerProductos() {
   try {
-    const response = await fetch("http://localhost/Sanitaria-brisas-3/backend/Api/api.php?seccion=producto");
+    const response = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=producto");
 
     // Verificamos si la respuesta HTTP es válida
     if (!response.ok) {
@@ -91,14 +91,11 @@ async function agregarProducto(e) {
   const formData = new FormData()
   formData.append("action", "agregarProducto")
   formData.append("nombre", document.getElementById("nombre").value)
-  formData.append("precio", document.getElementById("precio").value)
-  formData.append("categoria", document.getElementById("categoria").value)
   formData.append("descripcion", document.getElementById("descripcion").value)
-
-  const imagenFile = document.getElementById("imagen").files[0]
-  if (imagenFile) {
-    formData.append("imagen", imagenFile)
-  }
+  formData.append("precio", document.getElementById("precio").value)
+  formData.append("stock", document.getElementById("stock").value)
+  formData.append("categoria", document.getElementById("categoria").value)
+  
 
   try {
     const response = await fetch(API_URL, {
@@ -152,7 +149,7 @@ async function eliminarProducto(id) {
 
 async function obtenerUsuarios() {
   try {
-    const response = await fetch("http://localhost/Sanitaria-brisas-3/backend/Api/api.php?seccion=usuario");
+    const response = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=usuario");
 
     // Verificamos si la respuesta HTTP es válida
     if (!response.ok) {
