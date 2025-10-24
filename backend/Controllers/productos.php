@@ -15,30 +15,6 @@ function agregarProducto($nombre, $categoria, $precio, $stock, $descripcion) {
     if ($productoModel->agregarProducto($nombre, $categoria, $precio, $stock, $descripcion)) {
         echo json_encode(["success" => true, "message" => "Producto agregado exitosamente"]);
     } else {
-<<<<<<< HEAD
-    echo json_encode(["success" => false, "message" => "Error al agregar el producto"]); 
-   }
-}    
-
-
-function eliminarProducto($id) {
-    global $productoModel;
-    // DEPURACIÓN: Marcar entrada a la función
-    error_log("[DEBUG] Entrando a eliminarProducto con ID: $id");
-    echo "[DEBUG] Entrando a eliminarProducto\n";
-    try {
-        error_log("Intentando eliminar producto con ID: $id");
-        $resultado = $productoModel->eliminarProducto($id);
-        error_log("Resultado de eliminarProducto: " . var_export($resultado, true));
-        if ($resultado) {
-            echo json_encode(["success" => true, "message" => "Producto eliminado exitosamente"]);
-        } else {
-            echo json_encode(["success" => false, "message" => "Error al eliminar el producto"]);
-        }
-    } catch (Throwable $e) {
-        error_log("Excepción en eliminarProducto: " . $e->getMessage());
-        echo json_encode(["success" => false, "message" => "Excepción: " . $e->getMessage()]);
-=======
         echo json_encode(["success" => false, "message" => "Error al agregar el producto"]);
     }
 }
@@ -49,7 +25,6 @@ function eliminarProducto($id) {
         echo json_encode(["success" => true, "message" => "Producto eliminado exitosamente"]);
     } else {
         echo json_encode(["success" => false, "message" => "Error al eliminar el producto"]);
->>>>>>> 135bedfa009cfcd5b6d1ee2bf7d779ab5b30303f
     }
 }
 // Fallback global para errores fatales
