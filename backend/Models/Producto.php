@@ -21,7 +21,11 @@ class Producto {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }   
 
+<<<<<<< HEAD
      // Método para agregar un nuevo producto a la base de datos
+=======
+    // Método para agregar un nuevo producto a la base de datos
+>>>>>>> 135bedfa009cfcd5b6d1ee2bf7d779ab5b30303f
     public function agregarProducto($nombre, $categoria, $precio, $stock, $descripcion) {
         // Prepara la consulta SQL para insertar un nuevo registro en la tabla 'productos'
         $stmt = $this->pdo->prepare("INSERT INTO producto (nombre, categoria, precio, stock, descripcion) VALUES (:nombre, :categoria, :precio, :stock, :descripcion)");

@@ -15,6 +15,8 @@ require "../Controllers/Usuarios.php";
 require "../Controllers/logins.php";
 
 $requestMethod = $_SERVER["REQUEST_METHOD"];    
+
+// Obtener la sección de los parámetros GET para todos los métodos
 $seccion = $_GET["seccion"] ?? null;
 
 // Log para debugging
@@ -50,7 +52,11 @@ if ($requestMethod == "POST") {
         $stock = $_POST["stock"] ?? null;
         $categoria = $_POST["categoria"] ?? null;
 
+<<<<<<< HEAD
      if (!$nombre || !$categoria || !$precio || !$stock || !$descripcion) {
+=======
+        if (!$nombre || !$categoria || !$precio || !$stock || !$descripcion) {
+>>>>>>> 135bedfa009cfcd5b6d1ee2bf7d779ab5b30303f
             echo json_encode(["success" => false, "message" => "Faltan datos requeridos"]);
             exit;
         }

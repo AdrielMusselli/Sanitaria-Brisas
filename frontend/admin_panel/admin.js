@@ -11,7 +11,7 @@ document.querySelectorAll(".nav-link").forEach((link) => {
 
   document.getElementById("productoForm").addEventListener("submit", agregarProducto)
 
-  const API_URL = "http://localhost/Sanitaria-brisas/backend/Api/api.php";
+  API_URL = "http://localhost/Sanitaria-brisas/backend/Api/api.php";
 
 async function obtenerPedidos() {
   try {
@@ -43,7 +43,8 @@ async function obtenerPedidos() {
 
 async function obtenerProductos() {
   try {
-    const response = await fetch(`${API_URL}?seccion=producto`);
+    const response = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=producto");
+
     // Verificamos si la respuesta HTTP es válida
     if (!response.ok) {
       throw new Error(`Error HTTP: ${response.status}`);
@@ -51,17 +52,10 @@ async function obtenerProductos() {
 
     const data = await response.json();
     console.log("Productos recibidos:", data);
-
-    if (Array.isArray(data)) {
-      renderizarProductos(data);
-    } else {
-      console.error("Formato de respuesta inválido:", data);
-      alert("Error: Los datos recibidos no tienen el formato esperado");
-    }
+    renderizarProductos(data);
 
   } catch (error) {
     console.error("Error al obtener los productos:", error);
-    alert("Error al obtener los productos");
   }
 }
 function renderizarProductos(data) {
@@ -91,48 +85,6 @@ function renderizarProductos(data) {
     )
     .join("")
 }
-async function eliminarProducto(id) {
-  if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) {
-    return;
-  }
-
-  try {
-    console.log('Eliminando producto con ID:', id);
-    const urlString = `${API_URL}?seccion=producto&id=${id}`;
-    console.log('URL de eliminación:', urlString);
-
-    const response = await fetch(urlString, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-
-    let rawText = await response.text();
-    let data;
-    try {
-      data = JSON.parse(rawText);
-    } catch (jsonError) {
-      console.error('Respuesta cruda del backend:', rawText);
-      throw new Error('Respuesta del servidor no es JSON válido.');
-    }
-
-    if (!response.ok) {
-      throw new Error(data.message || `Error HTTP: ${response.status}`);
-    }
-
-    if (data.success) {
-      alert("Producto eliminado exitosamente");
-      obtenerProductos();
-    } else {
-      throw new Error(data.message || "Error al eliminar el producto");
-    }
-  } catch (error) {
-    console.error("Error al eliminar el producto:", error);
-    alert(error.message || "Error al eliminar el producto");
-  }
-}
-
 async function agregarProducto(e) {
   e.preventDefault()
 
@@ -144,29 +96,53 @@ async function agregarProducto(e) {
   formData.append("stock", document.getElementById("stock").value)
   formData.append("categoria", document.getElementById("categoria").value)
   
-
   try {
     const response = await fetch(API_URL + "?seccion=producto", {
       method: "POST",
       body: formData,
     })
-    if (!response.ok) {
-      throw new Error(`Error HTTP: ${response.status}`);
-    }
 
     const data = await response.json()
 
     if (data.success) {
       alert("Producto agregado exitosamente")
       document.getElementById("productoForm").reset()
-       obtenerProductos() // Actualizamos la lista de productos
-      mostrarSeccion("productos") // Volvemos a la sección de productos
+      cargarProductos()
+      mostrarSeccion("productos")
     } else {
       alert(data.message || "Error al agregar producto")
     }
   } catch (error) {
     console.error("Error:", error)
-    alert("Error al agregar el producto")
+    alert("Error de conexión con el servidor")
+  }
+}
+
+async function eliminarProducto(id) {
+  if (!confirm("¿Estás seguro de eliminar este producto?")) {
+    return
+  }
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `action=eliminarProducto&id=${id}`,
+    })
+
+    const data = await response.json()
+
+    if (data.success) {
+      alert("Producto eliminado exitosamente")
+      cargarProductos()
+    } else {
+      alert(data.message || "Error al eliminar producto")
+    }
+  } catch (error) {
+    console.error("Error:", error)
+    alert("Error de conexión con el servidor")
   }
 }
 
