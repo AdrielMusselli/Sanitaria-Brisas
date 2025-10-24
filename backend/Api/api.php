@@ -6,7 +6,9 @@ header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
 header('Access-Control-Max-Age: 86400'); // Cache para 24 horas
 
-ini_set('display_errors', 1);
+// Evitar que PHP imprima errores/warnings en HTML en la respuesta (el frontend espera JSON)
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
 error_reporting(E_ALL);
 
 require "../Controllers/productos.php"; 
@@ -52,11 +54,7 @@ if ($requestMethod == "POST") {
         $stock = $_POST["stock"] ?? null;
         $categoria = $_POST["categoria"] ?? null;
 
-<<<<<<< HEAD
-     if (!$nombre || !$categoria || !$precio || !$stock || !$descripcion) {
-=======
         if (!$nombre || !$categoria || !$precio || !$stock || !$descripcion) {
->>>>>>> 135bedfa009cfcd5b6d1ee2bf7d779ab5b30303f
             echo json_encode(["success" => false, "message" => "Faltan datos requeridos"]);
             exit;
         }

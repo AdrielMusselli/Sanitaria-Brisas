@@ -107,7 +107,7 @@ async function agregarProducto(e) {
     if (data.success) {
       alert("Producto agregado exitosamente")
       document.getElementById("productoForm").reset()
-      cargarProductos()
+      obtenerProductos()
       mostrarSeccion("productos")
     } else {
       alert(data.message || "Error al agregar producto")
@@ -124,19 +124,16 @@ async function eliminarProducto(id) {
   }
 
   try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `action=eliminarProducto&id=${id}`,
+    // Enviar petición DELETE con la sección e id en la query string (el backend espera seccion por GET para DELETE)
+    const response = await fetch(API_URL + `?seccion=producto&id=${id}`, {
+      method: "DELETE",
     })
 
     const data = await response.json()
 
     if (data.success) {
       alert("Producto eliminado exitosamente")
-      cargarProductos()
+      obtenerProductos()
     } else {
       alert(data.message || "Error al eliminar producto")
     }
