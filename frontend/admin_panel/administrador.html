@@ -34,6 +34,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="#" data-section="pedidos">
+                    <i class="fas fa-receipt me-2"></i>Pedidos
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="#" data-section="agregar">
                     <i class="fas fa-plus-circle me-2"></i>Agregar Producto
                 </a>
@@ -63,6 +68,30 @@
             </div>
         </section>
 
+        <!-- Pedidos Section -->
+        <section id="pedidos" class="content-section">
+            <h3 class="mb-3">Lista de Pedidos</h3>
+
+            <div class="table-responsive">
+                <table class="table table-striped" id="tablaPedidos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Dirección</th>
+                            <th>Precio Total</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los pedidos se cargarán aquí desde la API -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- Agregar Producto Section -->
         <section id="agregar" class="content-section">
             <h3 class="mb-3">Agregar Nuevo Producto</h3>
@@ -77,12 +106,11 @@
                     <label for="categoria" class="form-label">Categoría</label>
                     <select class="form-select" id="categoria" name="categoria" required>
                         <option value="">Seleccionar...</option>
-                        <option value="Lavabos">Lavabos</option>
-                        <option value="Inodoros">Inodoros</option>
-                        <option value="Duchas">Duchas</option>
-                        <option value="Grifería">Grifería</option>
-                        <option value="Accesorios">Accesorios</option>
                         <option value="Herramientas">Herramientas</option>
+                        <option value="Construccion">Construccion</option>
+                        <option value="Pinturas">Pinturas</option>
+                        <option value="Techos">Techos</option>
+                        <option value="Ofertas">Ofertas</option>
                     </select>
                 </div>
 
@@ -107,6 +135,36 @@
         </section>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/nav.js"></script>
     <script src="admin.js"></script>
 </body>
 </html>
+
+<!-- Modal para ver detalles del pedido -->
+<div class="modal fade" id="pedidoModal" tabindex="-1" aria-labelledby="pedidoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pedidoModalLabel">Detalles del pedido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Información del pedido</h6>
+                <p><strong>ID:</strong> <span id="modalPedidoId"></span></p>
+                <p><strong>Fecha:</strong> <span id="modalPedidoFecha"></span></p>
+                <p><strong>Estado:</strong> <span id="modalPedidoEstado"></span></p>
+                <p><strong>Precio total:</strong> $<span id="modalPedidoPrecio"></span></p>
+                <p><strong>Dirección de envío:</strong> <span id="modalPedidoDireccion"></span></p>
+
+                <hr>
+                <h6>Información del usuario</h6>
+                <p><strong>Nombre:</strong> <span id="modalUsuarioNombre"></span></p>
+                <p><strong>Email:</strong> <span id="modalUsuarioEmail"></span></p>
+                <p><strong>Teléfono:</strong> <span id="modalUsuarioTelefono"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

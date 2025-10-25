@@ -67,27 +67,172 @@ a:hover {
     color: #fff;
     text-decoration: none;
 }
+.navbar {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%) !important;
+    box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+    height: auto;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.8rem;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+}
+
+.navbar-brand span {
+    background: linear-gradient(45deg, #fff, #e3f2fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 0.2rem;
+    position: relative;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+.search-input {
+    border: none !important;
+    border-radius: 25px 0 0 25px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.95) !important;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    background: white !important;
+}
+
+.btn-search {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: none !important;
+    border-radius: 0 25px 25px 0 !important;
+    color: var(--primary-blue) !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.3s ease;
+}
+
+.btn-search:hover {
+    background: white !important;
+    color: var(--dark-blue) !important;
+    transform: scale(1.05);
+}
+.cart-badge {
+    font-size: 0.7rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+#cart-link:hover .cart-badge {
+    animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+    0%, 20%, 60%, 100% { transform: translate(-50%, -50%) translateY(0); }
+    40% { transform: translate(-50%, -50%) translateY(-10px); }
+    80% { transform: translate(-50%, -50%) translateY(-5px); }
+}
+
+main {
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.dropdown-menu {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.2);
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 0.5rem;
+}
+
+.dropdown-item:hover {
+    background: var(--light-blue);
+    color: var(--dark-blue);
+    transform: translateX(5px);
+}
+
+.dropdown-item i {
+    width: 20px;
+    color: var(--primary-blue);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 991px) {
+    main {
+        margin-top: 10px;
+    }
+    .navbar-nav .nav-link {
+        padding: 0.75rem 1rem;
+    }
+    .search-input {
+        min-width: 200px;
+    }
+    .navbar-nav.d-flex.flex-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        margin-top: 1rem;
+    }
+    .navbar-nav.d-flex.flex-row .nav-link {
+        margin: 0.25rem 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.5rem;
+    }
+    form.d-flex {
+        min-width: auto !important;
+        width: 100%;
+        margin: 1rem 0;
+    }
+}
+
+
 footer {
-    background: linear-gradient(#07259d, #030f3e);
     color: rgb(187, 186, 186);
     padding: 10px;
     position: relative;
     bottom: 0px;
     width: 100%;
-    height: 22vh;
+    height: auto;
     margin-top: 20px;
-    
 }
-header {
-    background: linear-gradient(#030f3e, #07259d);
-    color: white;
-    text-align: center;
-    margin-left: 20px;
-    font-size: 24px;
-    font-weight: bold;
-    width: 100%;
-    height: 13vh;
-}
+
 
 
 

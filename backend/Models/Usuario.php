@@ -23,6 +23,22 @@ class Usuario {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Obtener usuario por ID
+    public function obtenerPorId($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM usuario WHERE id_usuario = :id LIMIT 1");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Obtener usuario por email
+    public function obtenerPorEmail($email) {
+        $stmt = $this->pdo->prepare("SELECT * FROM usuario WHERE email = :email LIMIT 1");
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 
 public function agregar($id_usuario, $nombre, $email, $telefono, $contraseña) {
         // Insertar en la tabla 'usuario'

@@ -21,6 +21,17 @@ class Producto {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }   
 
+    // Método para obtener productos por categoría (case-insensitive y trim)
+    public function obtenerPorCategoria($categoria) {
+        // Normalizar la categoría (trim espacios y convertir primera letra a mayúscula)
+        $categoria = ucfirst(trim($categoria));
+        
+        $stmt = $this->pdo->prepare("SELECT * FROM producto WHERE categoria = :categoria");
+        $stmt->bindParam(':categoria', $categoria);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Método para agregar un nuevo producto a la base de datos
     public function agregarProducto($nombre, $categoria, $precio, $stock, $descripcion) {
         // Prepara la consulta SQL para insertar un nuevo registro en la tabla 'productos'

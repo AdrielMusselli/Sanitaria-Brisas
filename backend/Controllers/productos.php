@@ -7,7 +7,14 @@ $productoModel = new Producto($pdo); // Instancia del modelo
 
 function obtenerProducto() {
     global $productoModel;
-    echo json_encode($productoModel->obtenerTodos());
+    // Si se pasa ?categoria=xxx en GET, devolver sólo esa categoría
+    $categoria = $_GET['categoria'] ?? null;
+    if ($categoria) {
+        // Llamar al modelo para obtener por categoría
+        echo json_encode($productoModel->obtenerPorCategoria($categoria));
+    } else {
+        echo json_encode($productoModel->obtenerTodos());
+    }
 }
 
 function agregarProducto($nombre, $categoria, $precio, $stock, $descripcion) {

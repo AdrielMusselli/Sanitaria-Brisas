@@ -40,7 +40,15 @@ if ($requestMethod == "GET") {
     } else if ($seccion == "usuario") {
         obtenerUsuario();
     } else  if ($seccion == "login")  {
-        obtenerLogin();
+        // Devolver información de sesión (si el usuario está logueado).
+        // No devolver la lista de usuarios aquí: la llamada GET a seccion=login
+        // debe usarse por el frontend para verificar si hay sesión activa.
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        if (isset($_SESSION['user'])) {
+            echo json_encode(['success' => true, 'user' => $_SESSION['user']]);
+        } else {
+            echo json_encode(['success' => false]);
+        }
     } else {
         echo json_encode(["error" => "Sección inválida"]);
     }
@@ -64,7 +72,13 @@ if ($requestMethod == "POST") {
         agregarPedido($id_pedido, $id_usuario, $fecha, $estado, $precio_total, $direccion_envio);
     } else if ($seccion == "usuario") {
         agregarUsuario($id_usuario, $nombre, $email, $direccion, $telefono, $contrasena);
-    } else {
+     } else if ($seccion == "login") {
+        // POST /?seccion=login -> iniciar sesión
+        iniciarSesion();
+     } else if ($seccion == "logout") {
+        // POST /?seccion=logout -> cerrar sesión
+        cerrarSesion();
+     } else {
         echo json_encode(["success" => false, "message" => "Sección inválida"]);
     }
 }
