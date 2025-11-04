@@ -54,7 +54,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
+                            <th>Producto</th>
                             <th>Categoría</th>
                             <th>Precio</th>
                             <th>Descripción</th>
@@ -126,7 +126,20 @@
                     <label for="descripcion" class="form-label">Descripción</label>
                     <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
                 </div>
-                
+
+                <div class="mb-3">
+                    <label for="imagenes" class="form-label">Imagen del Producto</label>
+                    <div class="input-group">
+                        <input type="file" class="form-control" id="imagenes" name="imagenes" accept="image/*">
+                        <label class="input-group-text" for="imagenes">
+                            <i class="fas fa-image"></i>
+                        </label>
+                    </div>
+                    <div class="form-text">Formatos aceptados: JPG, PNG. Tamaño máximo: 2MB</div>
+                    <div id="preview-container" class="mt-2 d-none">
+                        <img id="image-preview" src="#" alt="Vista previa" class="img-thumbnail" style="max-height: 200px;">
+                    </div>
+                </div>
 
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save me-2"></i>Guardar Producto

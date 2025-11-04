@@ -15,18 +15,5 @@ class Login {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-    // Método para agregar un nuevo usuario
-    public function agregar($id_usuario, $nombre, $email, $telefono, $contraseña) {
-        $stmt = $this->pdo->prepare("INSERT INTO usuario (id_usuario, nombre, email, telefono, contraseña)
-                                     VALUES (:id_usuario, :nombre, :email, :telefono, :contraseña)");
-        return $stmt->execute([
-            ":id_usuario" => $id_usuario,
-            ":nombre" => $nombre,
-            ":email" => $email,
-            ":telefono" => $telefono,
-            ":contraseña" => $contraseña
-        ]);
-    }
 }
 ?>

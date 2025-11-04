@@ -33,7 +33,7 @@ class Producto {
     }
 
     // Método para agregar un nuevo producto a la base de datos
-    public function agregarProducto($nombre, $categoria, $precio, $stock, $descripcion) {
+    public function agregarProducto($nombre, $categoria, $precio, $stock, $descripcion, $imagenes) {
         // Prepara la consulta SQL para insertar un nuevo registro en la tabla 'productos'
         $stmt = $this->pdo->prepare("INSERT INTO producto (nombre, categoria, precio, stock, descripcion) VALUES (:nombre, :categoria, :precio, :stock, :descripcion)");
 
@@ -43,6 +43,7 @@ class Producto {
         $stmt->bindParam(':precio', $precio);
         $stmt->bindParam(':stock', $stock);
         $stmt->bindParam(':descripcion', $descripcion);
+        $stmt->bindParam(':imagenes', $imagenes);
 
         // Ejecuta la consulta y devuelve true si tuvo éxito, o false en caso contrario
         return $stmt->execute();

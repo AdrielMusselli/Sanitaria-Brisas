@@ -1,4 +1,4 @@
-document.querySelectorAll(".nav-link").forEach((link) => {
+ document.querySelectorAll(".nav-link").forEach((link) => {
     link.addEventListener("click", function (e) {
       e.preventDefault()
       const section = this.getAttribute("data-section")
@@ -125,7 +125,7 @@ function renderizarProductos(data) {
   const tbody = document.querySelector("#tablaProductos tbody")
 
   if (data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No hay productos</td></tr>'
+    tbody.innerHTML = '<tr><td colspan="7" class="text-center">No hay productos</td></tr>'
     return
   }
 
@@ -134,7 +134,15 @@ function renderizarProductos(data) {
       (producto) => `
         <tr>
           <td>${producto.id_producto}</td>
-          <td>${producto.nombre}</td>
+          <td>
+            <div class="d-flex align-items-center">
+              <img src="${producto.imagen || '../assets/pintura.jpeg'}" 
+                   alt="${producto.nombre}" 
+                   class="me-2" 
+                   style="width: 50px; height: 50px; object-fit: cover;">
+              ${producto.nombre}
+            </div>
+          </td>
           <td>${producto.categoria}</td>
           <td>$${Number.parseFloat(producto.precio).toFixed(2)}</td>
           <td>${producto.descripcion || ''}</td>
@@ -158,6 +166,33 @@ async function agregarProducto(e) {
   formData.append("precio", document.getElementById("precio").value)
   formData.append("stock", document.getElementById("stock").value)
   formData.append("categoria", document.getElementById("categoria").value)
+  
+  // Manejar la imagen
+  const imagenesInput = document.getElementById("imagenes");
+  if (imagenesInput.files.length > 0) {
+    try {
+      const imageFormData = new FormData();
+      imageFormData.append("imagenes", imagenesInput.files[0]);
+      
+      const uploadResponse = await fetch("http://localhost/Sanitaria-brisas/backend/Api/upload.php", {
+        method: "POST",
+        body: imageFormData
+      });
+      
+      const uploadResult = await uploadResponse.json();
+      
+      if (uploadResult.success) {
+        formData.append("imagenes", uploadResult.path);
+        console.log("Ruta de imagen agregada:", uploadResult.path);
+      } else {
+        throw new Error(uploadResult.message);
+      }
+    } catch (error) {
+      console.error("Error subiendo imagen:", error);
+      alert("Error al subir la imagen: " + error.message);
+      return;
+    }
+  }
   
   try {
     const response = await fetch(API_URL + "?seccion=producto", {
@@ -241,6 +276,35 @@ async function obtenerUsuarios() {
 }
 
 // Ejecutar al cargar la página
+// Preview de imagen
+document.getElementById('imagenes')?.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validar tamaño (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+        alert('La imagen es demasiado grande. El tamaño máximo es 2MB.');
+        this.value = '';
+        return;
+    }
+
+    // Validar tipo
+    if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecciona un archivo de imagen válido.');
+        this.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const preview = document.getElementById('image-preview');
+        const container = document.getElementById('preview-container');
+        preview.src = e.target.result;
+        container.classList.remove('d-none');
+    };
+    reader.readAsDataURL(file);
+});
+
 document.addEventListener("DOMContentLoaded", obtenerPedidos);
 document.addEventListener("DOMContentLoaded", obtenerProductos);
 document.addEventListener("DOMContentLoaded", obtenerUsuarios);

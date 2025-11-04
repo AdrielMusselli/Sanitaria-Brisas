@@ -31,30 +31,83 @@ class Usuario {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Obtener usuario por email
-    public function obtenerPorEmail($email) {
-        $stmt = $this->pdo->prepare("SELECT * FROM usuario WHERE email = :email LIMIT 1");
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    // ==============================
+    // AGREGAR USUARIO (Registro)
+    // ==============================
+ public function agregar($nombre, $email, $telefono, $contrasena) {
+    try {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO usuario (nombre, email, telefono, contraseña)
+            VALUES (:nombre, :email, :telefono, :contrasena)
+        ");
 
-
-public function agregar($id_usuario, $nombre, $email, $telefono, $contraseña) {
-        // Insertar en la tabla 'usuario'
-        $stmt = $this->pdo->prepare("INSERT INTO usuario (id_usuario, nombre, email, telefono, contraseña)
-        VALUES (:id_usuario, :nombre, :email, :telefono, :contraseña)");
-
-        return $stmt->execute([
-            ":id_usuario" => $id_usuario,
+        $ok = $stmt->execute([
             ":nombre" => $nombre,
             ":email" => $email,
             ":telefono" => $telefono,
-            ":contraseña" => $contraseña,
+            ":contrasena" => $contrasena
         ]);
+
+        return $ok;
+    } catch (PDOException $e) {
+        // Log detallado del error
+        error_log("❌ Error SQL en Usuario::agregar => " . $e->getMessage());
+        echo json_encode([
+            "success" => false,
+            "message" => "Error SQL: " . $e->getMessage()
+        ]);
+        return false;
+    }
 }
 
+    // ==============================
+    // OBTENER USUARIO POR EMAIL
+    // ==============================
+    public function obtenerPorEmail($email) {
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM usuario WHERE email = :email LIMIT 1");
+            $stmt->execute([":email" => $email]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error al obtener usuario: " . $e->getMessage());
+            return false;
+        }
+    }
 
-    
+
+    // ==============================
+    // ELIMINAR USUARIO
+    // ==============================
+    public function eliminar($id_usuario) {
+        try {
+            $stmt = $this->pdo->prepare("DELETE FROM usuario WHERE id_usuario = :id");
+            return $stmt->execute([":id" => $id_usuario]);
+        } catch (PDOException $e) {
+            error_log("Error al eliminar usuario: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // ==============================
+    // ACTUALIZAR USUARIO
+    // ==============================
+    public function actualizar($id_usuario, $nombre, $email, $telefono) {
+        try {
+            $stmt = $this->pdo->prepare("
+                UPDATE usuario 
+                SET nombre = :nombre, email = :email, telefono = :telefono
+                WHERE id_usuario = :id
+            ");
+            return $stmt->execute([
+                ":id" => $id_usuario,
+                ":nombre" => $nombre,
+                ":email" => $email,
+                ":telefono" => $telefono
+            ]);
+        } catch (PDOException $e) {
+            error_log("Error al actualizar usuario: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

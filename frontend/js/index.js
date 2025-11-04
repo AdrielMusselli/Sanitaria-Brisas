@@ -1,4 +1,3 @@
-
 const producto = [];
 
 // Función para mostrar el spinner de carga
@@ -37,16 +36,16 @@ function mostrarProductos(productos) {
       col.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3", "mb-3");
 
       const card = document.createElement("div");
-      card.classList.add("card", "h-100");
+      card.classList.add("card", "h-20");
 
-      const imagen = producto.imagen
-        ? producto.imagen
+      const imagen = producto.imagenes
+        ? producto.imagenes
         : "../assets/pintura.jpeg"; // imagen por defecto
 
       card.innerHTML = `
         <div class="card-body">
           <a href="../paginas/producto.html" class="text-decoration-none text-dark">
-            <div class="card-content text-center">
+            <div class="card-content">
               <img src="${imagen}" alt="${producto.nombre}" class="img-fluid mb-3 rounded">
               <h3 class="card-title">${producto.nombre}</h3>
               <h5 class="card-price">$${producto.precio}</h5>
@@ -253,11 +252,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!user) {
-      // No está logueado: redirigir a Login
-      // Se puede mejorar mostrando un modal; por simplicidad redirigimos.
-      window.location.href = '../paginas/Login.html';
-      return;
-    }
+  // Mostrar modal de login en lugar de redirigir
+  const loginModal = document.getElementById("loginModal");
+
+  if (loginModal) {
+    loginModal.style.display = "block"; // Muestra el modal
+  } else {
+    console.warn("⚠️ No se encontró el modal de login en el DOM");
+  }
+
+  return;
+}
+
 
     // Buscar el producto en el array global `producto`
     const prod = producto.find(p => String(p.id_producto) === String(id));
@@ -286,7 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
           imagen: prod.imagen || '../assets/pintura.jpeg'
         };
       }
-      console.log('Debug: Nuevo estado del carrito:', cart);
       saveCart(cart);
       updateCartCount();
 
@@ -346,4 +351,191 @@ function updateCartCount() {
     badge.style.display = 'none';
   }
 }
+
+// =========================
+// 🔐 Lógica de modales
+// =========================
+const loginForm = document.getElementById("loginForm");
+const registroForm = document.getElementById("registroForm");
+
+document.addEventListener("click", (e) => {
+  const loginBtn = e.target.closest("#btnLogin");
+  const registroBtn = e.target.closest("#btnRegistrarse");
+  const cerrarBtn = e.target.closest(".cerrar");
+
+  if (loginBtn) {
+    document.getElementById("loginModal").style.display = "block";
+  }
+
+  if (registroBtn) {
+    document.getElementById("registroModal").style.display = "block";
+  }
+
+  if (cerrarBtn) {
+    document.getElementById("loginModal").style.display = "none";
+    document.getElementById("registroModal").style.display = "none";
+  }
+});
+
+// =========================
+// ⚙️ Función para actualizar el menú del usuario después del login
+// =========================
+async function updateUserMenu() {
+  const res = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=login", {
+    method: "GET",
+    credentials: "include"
+  });
+  const data = await res.json();
+
+  const userDropdown = document.getElementById("userDropdown");
+  if (data.success && data.user) {
+    userDropdown.innerHTML = `
+      <li><a class="dropdown-item disabled"><i class="fas fa-user me-2"></i>${data.user.nombre}</a></li>
+      <li><a id="btnLogout" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>
+    `;
+  } else {
+    userDropdown.innerHTML = `
+      <li><a id="btnLogin" class="dropdown-item"><i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión</a></li>
+      <li><a id="btnRegistrarse" class="dropdown-item"><i class="fas fa-user-plus me-2"></i>Registrarse</a></li>
+    `;
+  }
+}
+
+// =========================
+// 🔑 LOGIN
+// =========================
+if (loginForm) {
+  const errorDiv = document.createElement("div");
+  errorDiv.className = "alert alert-danger d-none mt-3";
+  loginForm.appendChild(errorDiv);
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Iniciando sesión...';
+
+    errorDiv.classList.add("d-none");
+
+    const formData = new FormData(loginForm);
+
+    try {
+      const res = await fetch('http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=login', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        document.getElementById("loginModal").style.display = "none";
+        await updateUserMenu();
+      } else {
+        errorDiv.textContent = data.message || "Credenciales incorrectas";
+        errorDiv.classList.remove("d-none");
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      errorDiv.textContent = "Error al conectar con el servidor.";
+      errorDiv.classList.remove("d-none");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+    }
+  });
+}
+
+// =========================
+// 🧾 REGISTRO
+// =========================
+if (registroForm) {
+  const registroErrorDiv = document.createElement("div");
+  registroErrorDiv.className = "alert alert-danger d-none mt-3";
+  registroForm.appendChild(registroErrorDiv);
+
+  const registroOkDiv = document.createElement("div");
+  registroOkDiv.className = "alert alert-success d-none mt-3";
+  registroForm.appendChild(registroOkDiv);
+
+  registroForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const submitBtn = registroForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Registrando...';
+
+    registroErrorDiv.classList.add("d-none");
+    registroOkDiv.classList.add("d-none");
+
+    const formData = {
+      nombre: registroForm.nombre.value,
+      email: registroForm.email.value,
+      telefono: registroForm.telefono.value,
+      password: registroForm.password.value,
+      accion: 'registro'
+    };
+
+    try {
+      const res = await fetch('http://localhost/Sanitaria-Brisas/backend/Api/api.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData),
+        credentials: "include"
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        registroOkDiv.textContent = data.message;
+        registroOkDiv.classList.remove("d-none");
+        registroForm.reset();
+
+        setTimeout(() => {
+          document.getElementById("registroModal").style.display = "none";
+          registroOkDiv.classList.add("d-none");
+        }, 2000);
+      } else {
+        registroErrorDiv.textContent = data.message;
+        registroErrorDiv.classList.remove("d-none");
+      }
+
+    } catch (err) {
+      console.error("Error:", err);
+      registroErrorDiv.textContent = "Error al conectar con el servidor.";
+      registroErrorDiv.classList.remove("d-none");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+    }
+  });
+}
+
+
+// =========================
+// 🚪 LOGOUT
+// =========================
+document.addEventListener("click", async (e) => {
+  const logoutBtn = e.target.closest("#btnLogout");
+  if (logoutBtn) {
+    const res = await fetch('http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=logout', {
+      method: 'POST',
+      credentials: 'include'
+    });
+    const data = await res.json();
+    if (data.success) {
+      await updateUserMenu();
+    }
+  }
+});
+
+// =========================
+// 🔁 Al cargar la página, verificar sesión activa
+// =========================
+document.addEventListener("DOMContentLoaded", updateUserMenu);
 

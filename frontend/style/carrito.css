@@ -7,7 +7,6 @@
 .navbar {
     background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%) !important;
     box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
-    padding: 1rem 0;
     transition: all 0.3s ease;
     height: auto;
 }
@@ -96,10 +95,7 @@
     80% { transform: translate(-50%, -50%) translateY(-5px); }
 }
 
-main {
-    margin-top: 20px;
-    padding: 20px;
-}
+
 
 .dropdown-menu {
     border: none;
@@ -169,10 +165,6 @@ footer {
     height: 22vh;
     margin-top: 20px;
     
-}
-main {
-    padding: 20px;
-
 }
 
 header {
@@ -355,4 +347,3 @@ body {
             color: var(--light-blue);
             margin-bottom: 1rem;
         }
-

@@ -20,12 +20,4 @@ function obtenerUsuario() {
     }
 }
 
-function agregarUsuario($id_usuario, $nombre, $email, $telefono, $contraseña) {
-    global $usuarioModel;
-    if ($usuarioModel->agregar($id_usuario, $nombre, $email, $telefono, $contraseña)) {
-        echo json_encode(["message" => "usuario agregado"]);
-    } else {
-        echo json_encode(["error" => "Error al agregar el usuario"]);
-    }
-}
 ?>

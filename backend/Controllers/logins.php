@@ -1,21 +1,16 @@
 <?php
-require_once "../Models/Usuario.php"; // Use Usuario model for login
-
+require_once "../Models/Usuario.php";
 $pdo = require "../Config/pdo.php";
 $usuarioModel = new Usuario($pdo);
 
-function obtenerLogin() {
-    global $usuarioModel;
-    echo json_encode($usuarioModel->obtenerTodos());
-}
-
-// Maneja el inicio de sesión (POST)
-function iniciarSesion() {
+// ==============================
+// INICIAR SESIÓN
+// ==============================
+function iniciarSesion($data = []) {
     global $usuarioModel;
 
-    // Leer email y password desde POST
-    $email = $_POST['email'] ?? null;
-    $password = $_POST['password'] ?? null;
+    $email = $data['email'] ?? $_POST['email'] ?? null;
+    $password = $data['password'] ?? $_POST['password'] ?? null;
 
     if (!$email || !$password) {
         echo json_encode(['success' => false, 'message' => 'Faltan credenciales']);
@@ -30,10 +25,9 @@ function iniciarSesion() {
 
     $stored = $user['contraseña'] ?? $user['contrasena'] ?? null;
 
-    // Verificar contraseña: si parece hash de password_hash, usar password_verify, si no, comparar plano
     $passwordOk = false;
     if ($stored) {
-        if (strpos($stored, '$2y$') === 0 || strpos($stored, '$2a$') === 0 || strpos($stored, '$argon2') !== false) {
+        if (preg_match('/^\$2[ayb]\$|\$argon2/i', $stored)) {
             $passwordOk = password_verify($password, $stored);
         } else {
             $passwordOk = ($password === $stored);
@@ -45,23 +39,70 @@ function iniciarSesion() {
         return;
     }
 
-    // Iniciar sesión y devolver datos mínimos
     if (session_status() !== PHP_SESSION_ACTIVE) session_start();
-    // Guardar datos en la sesión (sin la contraseña)
     $_SESSION['user'] = [
         'id' => $user['id_usuario'] ?? $user['id'] ?? null,
-        'nombre' => $user['nombre'] ?? null,
-        'email' => $user['email'] ?? null,
+        'nombre' => $user['nombre'] ?? '',
+        'email' => $user['email'] ?? '',
     ];
 
-    echo json_encode(['success' => true, 'message' => 'Inicio de sesión correcto', 'user' => $_SESSION['user']]);
+    echo json_encode([
+        'success' => true,
+        'message' => 'Inicio de sesión correcto',
+        'user' => $_SESSION['user']
+    ]);
 }
 
-// Maneja el cierre de sesión (POST)
+// ==============================
+// REGISTRAR USUARIO
+// ==============================
+function registrarUsuario($data = []) {
+    global $usuarioModel;
+
+    header('Content-Type: application/json');
+
+    try {
+        $nombre = trim($data['nombre'] ?? $_POST['nombre'] ?? '');
+        $email = trim($data['email'] ?? $_POST['email'] ?? '');
+        $telefono = trim($data['telefono'] ?? $_POST['telefono'] ?? '');
+        $password = trim($data['password'] ?? $_POST['password'] ?? '');
+
+        if (!$email || !$password) {
+            echo json_encode(['success' => false, 'message' => 'Faltan datos obligatorios']);
+            return;
+        }
+
+        if (!$usuarioModel) {
+            throw new Exception('Modelo de usuario no inicializado');
+        }
+
+        $existente = $usuarioModel->obtenerPorEmail($email);
+        if ($existente) {
+            echo json_encode(['success' => false, 'message' => 'El correo ya está registrado']);
+            return;
+        }
+
+        $hashed = password_hash($password, PASSWORD_BCRYPT);
+
+        $ok = $usuarioModel->agregar($nombre, $email, $telefono, $hashed);
+
+        if ($ok) {
+            echo json_encode(['success' => true, 'message' => 'Usuario registrado correctamente']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error al registrar usuario']);
+        }
+
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => 'Error interno: '.$e->getMessage()]);
+    }
+}
+
+// ==============================
+// CERRAR SESIÓN
+// ==============================
 function cerrarSesion() {
     if (session_status() !== PHP_SESSION_ACTIVE) session_start();
     session_destroy();
-    echo json_encode(['success' => true, 'message' => 'Sesión cerrada']);
+    echo json_encode(['success' => true, 'message' => 'Sesión cerrada correctamente']);
 }
-
 ?>

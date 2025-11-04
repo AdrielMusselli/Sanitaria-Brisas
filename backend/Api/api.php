@@ -1,113 +1,153 @@
 <?php
+// ==============================
 // Configuración de CORS
-header('Content-Type: application/json');
+// ==============================
+header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
-header('Access-Control-Max-Age: 86400'); // Cache para 24 horas
+header('Access-Control-Max-Age: 86400');
 
-// Evitar que PHP imprima errores/warnings en HTML en la respuesta (el frontend espera JSON)
-ini_set('display_errors', 0);
+// ==============================
+// Manejo de errores
+// ==============================
+ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 error_reporting(E_ALL);
 
+// ==============================
+// Requerimientos de controladores
+// ==============================
 require "../Controllers/productos.php"; 
 require "../Controllers/Pedidos.php";
 require "../Controllers/Usuarios.php";
 require "../Controllers/logins.php";
 
-$requestMethod = $_SERVER["REQUEST_METHOD"];    
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
 
-// Obtener la sección de los parámetros GET para todos los métodos
-$seccion = $_GET["seccion"] ?? null;
 
-// Log para debugging
-error_log("=== REQUEST INFO ===");
-error_log("Method: " . $requestMethod);
-error_log("Section: " . ($seccion ?? 'null'));
-error_log("GET params: " . json_encode($_GET));
-error_log("==================");
+// ==============================
+// Determinar sección según método
+// ==============================
+$requestMethod = $_SERVER["REQUEST_METHOD"];
+$input = json_decode(file_get_contents("php://input"), true) ?? [];
 
-// Log para debugging
-error_log("Request Method: " . $requestMethod);
-error_log("Seccion: " . ($seccion ?? "no definida"));
+if ($requestMethod === 'POST') {
+    // Permite obtener seccion por POST o GET
+    $seccion = $input['accion'] ?? $_POST['accion'] ?? $_GET['seccion'] ?? null;
+} elseif ($requestMethod === 'GET' || $requestMethod === 'DELETE') {
+    $seccion = $_GET['seccion'] ?? null;
+} else {
+    $seccion = null;
+}
 
+$seccion = $seccion ? trim($seccion) : null;
+error_log(">>> [API DEBUG] Método: $requestMethod | Sección: '$seccion'");
+
+// ==============================
+// Métodos GET
+// ==============================
 if ($requestMethod == "GET") {
-    if ($seccion == "producto") {
-        obtenerProducto();
-    } else if ($seccion == "pedido") {
-        obtenerPedido();
-    } else if ($seccion == "usuario") {
-        obtenerUsuario();
-    } else  if ($seccion == "login")  {
-        // Devolver información de sesión (si el usuario está logueado).
-        // No devolver la lista de usuarios aquí: la llamada GET a seccion=login
-        // debe usarse por el frontend para verificar si hay sesión activa.
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
-        if (isset($_SESSION['user'])) {
-            echo json_encode(['success' => true, 'user' => $_SESSION['user']]);
-        } else {
-            echo json_encode(['success' => false]);
-        }
-    } else {
-        echo json_encode(["error" => "Sección inválida"]);
+
+    switch ($seccion) {
+
+        case "producto":
+            obtenerProducto();
+            break;
+
+        case "pedido":
+            obtenerPedido();
+            break;
+
+        case "usuario":
+            obtenerUsuario();
+            break;
+
+        case "login":
+            // Verificar sesión activa
+            if (isset($_SESSION['user'])) {
+                echo json_encode(['success' => true, 'user' => $_SESSION['user']]);
+            } else {
+                echo json_encode(['success' => false]);
+            }
+            break;
+
+        default:
+            echo json_encode(["success" => false, "message" => "Sección inválida"]);
     }
 }
 
+// ==============================
+// Métodos POST
+// ==============================
 if ($requestMethod == "POST") {
-    if ($seccion == "producto") {
-        $nombre = $_POST["nombre"] ?? null;
-        $descripcion = $_POST["descripcion"] ?? null;
-        $precio = $_POST["precio"] ?? null;
-        $stock = $_POST["stock"] ?? null;
-        $categoria = $_POST["categoria"] ?? null;
 
-        if (!$nombre || !$categoria || !$precio || !$stock || !$descripcion) {
-            echo json_encode(["success" => false, "message" => "Faltan datos requeridos"]);
-            exit;
-        }
+    switch ($seccion) {
 
-        agregarProducto($nombre, $categoria, $precio, $stock, $descripcion);
-    } else if ($seccion == "pedido") {
-        agregarPedido($id_pedido, $id_usuario, $fecha, $estado, $precio_total, $direccion_envio);
-    } else if ($seccion == "usuario") {
-        agregarUsuario($id_usuario, $nombre, $email, $direccion, $telefono, $contrasena);
-     } else if ($seccion == "login") {
-        // POST /?seccion=login -> iniciar sesión
-        iniciarSesion();
-     } else if ($seccion == "logout") {
-        // POST /?seccion=logout -> cerrar sesión
-        cerrarSesion();
-     } else {
-        echo json_encode(["success" => false, "message" => "Sección inválida"]);
+        case "producto":
+            agregarProducto(
+                $input['nombre'] ?? null,
+                $input['categoria'] ?? null,
+                $input['precio'] ?? null,
+                $input['stock'] ?? null,
+                $input['descripcion'] ?? null,
+                $input['imagenes'] ?? null
+            );
+            break;
+
+        case "pedido":
+            agregarPedido(
+                $input['id_pedido'] ?? null,
+                $input['id_usuario'] ?? null,
+                $input['fecha'] ?? null,
+                $input['estado'] ?? null,
+                $input['precio_total'] ?? null,
+                $input['direccion_envio'] ?? null
+            );
+            break;
+
+        case "login":
+            iniciarSesion($input);
+            break;
+
+        case "registro":
+            registrarUsuario($input); 
+            break;
+
+        case "logout":
+            cerrarSesion();
+            break;
+
+        default:
+            echo json_encode(["success" => false, "message" => "Sección inválida"]);
     }
 }
 
+// ==============================
+// Métodos DELETE
+// ==============================
 if ($requestMethod == "DELETE") {
-    // Log detallado para debugging
-    error_log("=== DEBUG DELETE REQUEST ===");
-    error_log("REQUEST_METHOD: " . $_SERVER['REQUEST_METHOD']);
-    error_log("QUERY_STRING: " . $_SERVER['QUERY_STRING']);
-    error_log("GET params: " . json_encode($_GET));
-    error_log("Seccion recibida: " . ($seccion ?? 'null'));
-    error_log("=========================");
-    
-    // Forzar la obtención de la sección desde GET para DELETE
-    $seccion = $_GET["seccion"] ?? null;
-    
-    if ($seccion === "producto") {
-        $id = $_GET["id"] ?? null;
-        if (!$id) {
-            echo json_encode(["success" => false, "message" => "ID de producto no proporcionado"]);
-            exit;
-        }
-        eliminarProducto($id);
-    } else {
-        echo json_encode(["success" => false, "message" => "Sección inválida para DELETE. Sección recibida: " . ($seccion ?? "ninguna")]);
+    $id = $_GET["id"] ?? null;
+
+    switch ($seccion) {
+        case "producto":
+            if (!$id) {
+                echo json_encode(["success" => false, "message" => "ID de producto no proporcionado"]);
+                exit;
+            }
+            eliminarProducto($id);
+            break;
+
+        default:
+            echo json_encode(["success" => false, "message" => "Sección inválida para DELETE"]);
     }
 }
 
-// Manejar las solicitudes OPTIONS para CORS
+// ==============================
+// OPTIONS (CORS preflight)
+// ==============================
 if ($requestMethod == "OPTIONS") {
     http_response_code(200);
     exit();

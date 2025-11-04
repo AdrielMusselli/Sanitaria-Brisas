@@ -17,9 +17,9 @@ function obtenerProducto() {
     }
 }
 
-function agregarProducto($nombre, $categoria, $precio, $stock, $descripcion) {
+function agregarProducto($nombre, $categoria, $precio, $stock, $descripcion, $imagenes) {
     global $productoModel;
-    if ($productoModel->agregarProducto($nombre, $categoria, $precio, $stock, $descripcion)) {
+    if ($productoModel->agregarProducto($nombre, $categoria, $precio, $stock, $descripcion, $imagenes)) {
         echo json_encode(["success" => true, "message" => "Producto agregado exitosamente"]);
     } else {
         echo json_encode(["success" => false, "message" => "Error al agregar el producto"]);
