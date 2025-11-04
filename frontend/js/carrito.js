@@ -1,5 +1,4 @@
-// Carrito dinámico: renderiza items desde localStorage y permite modificar cantidades
-console.log('Debug: carrito.js cargado');
+
 
 document.addEventListener("DOMContentLoaded", async () => {
     // Verificar si hay sesión activa
@@ -64,7 +63,6 @@ function renderCartItems() {
                 <div class="col-md-4">
                     <h5 class="mb-1">${escapeHtml(item.nombre)}</h5>
                     <p class="text-muted mb-0">&nbsp;</p>
-                    <small class="text-muted">ID: ${item.id || item.id_producto}</small>
                 </div>
                 <div class="col-md-3">
                     <div class="quantity-controls d-flex align-items-center">

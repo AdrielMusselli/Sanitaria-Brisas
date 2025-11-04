@@ -11,7 +11,7 @@
 </head>
 <body>
    <header>
-   <nav class="navbar navbar-expand-lg navbar-dark">
+   <nav class="navbar navbar-expand-lg navbar-dark mb-4">
         <div class="container-fluid">
           <a class="navbar-brand d-flex align-items-center " href="../paginas/index.html">
             <h3>Sanitaria Brisas</h3>
@@ -22,15 +22,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>   
                 
-                <!-- barra de busqueda -->
-                <form class="d-flex me-3" style="min-width: 300px;">
-                    <div class="input-group">
-                        <input class="form-control search-input" type="search" placeholder="Buscar productos..." aria-label="Search">
-                        <button class="btn btn-search" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </form>
+        
                 
                 <div class="navbar-nav d-flex flex-row">
                     <!-- carrito icono -->
@@ -69,15 +61,13 @@
                 <div id="cart-items-container"></div>
             <!-- Boton de continuar comprando -->
                 <div class="mt-4 mb-4">
-                    <button class="btn btn-outline-custom">
-                        <a href="index.html">
+                    <a href="index.html" class="btn btn-outline-custom">
                         <i class="fas fa-arrow-left me-2"></i>Continuar Comprando
-                        </a>
-                    </button>
+                    </a>
                 </div>
             </div>
                 <!-- Sumario de compra -->
-             <div class="col-lg-4">
+             <div class="col-lg-4 p-3">
                 <div class="summary-card">
                     <div class="summary-header">
                         <h4 class="mb-0">
@@ -103,14 +93,6 @@
                             <strong class="total-price">$997.76</strong>
                         </div>
 
-                        <div class="mb-4">
-                            <label class="form-label">Código de Descuento</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Ingresa tu código">
-                                <button class="btn btn-outline-custom" type="button">Aplicar</button>
-                            </div>
-                        </div>
-
                         
                         <a href="checkout.html" class="btn btn-primary-custom w-100 mb-3">
                             <span class="fas fa-credit-card me-2"></span>proceder al Pago
@@ -126,21 +108,10 @@
                 </div>
             </div>
         </div>
-                <!-- Productos recomendados -->
-        <h2>Productos que te pueden interesar</h2>
-        <div class="card-container d-flex flex-wrap">
-        <div class="card">
-      <div class="card-content">
-        <img src="../assets/pintura.jpeg" alt="" class="img-fluid mb-3">
-        <h3 class="card-title">Pintura</h3>
-        <h5 class="card-price">1500$</h5>
-        <p class="card-text">Pintura fachera facherita</p>
-        <a class="card-button" data-id="${agregacion.id}">Agregar al carrito</a>
-        </div>
     </div>
     </main>
 
-         <footer class=" bg-dark container-fluid py-4" style="color: rgb(187, 186, 186); height: 22vh;">
+         <footer class=" bg-dark container-fluid py-4" style="color: rgb(187, 186, 186);">
     <div class="row h-100 align-items-start">
         <div class="col-md-4 col-12">
             <h6>Soluciones para tu hogar de todo para tu hogar</h6>

@@ -252,18 +252,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!user) {
-  // Mostrar modal de login en lugar de redirigir
   const loginModal = document.getElementById("loginModal");
 
   if (loginModal) {
-    loginModal.style.display = "block"; // Muestra el modal
+    loginModal.style.display = "block";
   } else {
     console.warn("⚠️ No se encontró el modal de login en el DOM");
   }
 
   return;
 }
-
 
     // Buscar el producto en el array global `producto`
     const prod = producto.find(p => String(p.id_producto) === String(id));
@@ -272,13 +270,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    console.debug('Agregando al carrito:', prod);
 
     // Agregar al carrito en localStorage
     try {
-      console.log('Debug: Producto a agregar:', prod);
       const cart = getCart();
-      console.log('Debug: Estado actual del carrito:', cart);
       
       const productId = String(prod.id_producto); // Asegurar que el ID sea string
       if (cart[productId]) {
