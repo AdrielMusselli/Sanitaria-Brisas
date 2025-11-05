@@ -44,6 +44,7 @@ function iniciarSesion($data = []) {
         'id' => $user['id_usuario'] ?? $user['id'] ?? null,
         'nombre' => $user['nombre'] ?? '',
         'email' => $user['email'] ?? '',
+        'admin' => $user['admin'] ?? '',
     ];
 
     echo json_encode([

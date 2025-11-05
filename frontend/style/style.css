@@ -223,13 +223,14 @@ footer {
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-2px);
 }
 
 .card img {
   width: 100%;
   height: 150px;
   object-fit: cover;
+  position: relative;
 }
 
 .card-content {
@@ -255,7 +256,6 @@ footer {
   display: inline-block;
   margin-top: 0px;
   padding: 8px 12px;
-  background: #042b55;
   color: #fff;
   text-decoration: none;
   border-radius: 6px;
@@ -323,3 +323,69 @@ footer {
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+
+/* boton favoritos */
+.btn-favorito {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  border: inherit;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff4b5c;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+/* Hover */
+.btn-favorito:hover {
+  background: #ff4b5c;
+  color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 75, 92, 0.3);
+}
+
+/* Estado activo (favorito marcado) */
+.btn-favorito.active {
+  background: #ff4b5c;
+  color: white;
+  border-color: #ff4b5c;
+  box-shadow: 0 4px 14px rgba(255, 75, 92, 0.4);
+  transform: scale(1.05);
+}
+
+/* Animación de latido al hacer clic */
+.btn-favorito.active i {
+  animation: heartBeat 0.4s ease;
+}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.3); }
+  60% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+/* Ícono dentro (para evitar interferencias de click) */
+.btn-favorito i {
+  pointer-events: none;
+}
+
+/* Ajuste para pantallas pequeñas */
+@media (max-width: 576px) {
+  .btn-favorito {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    top: 8px;
+    right: 8px;
+  }
+}
+

@@ -21,7 +21,6 @@ function mostrarProductos(productos) {
     contenedor.innerHTML = "";
 
     if (productos.length === 0) {
-      // Crear el mensaje de "Producto no encontrado"
       const mensajeDiv = document.createElement("div");
       mensajeDiv.classList.add("col-12", "text-center", "my-5", "h-400");
       mensajeDiv.innerHTML = `
@@ -36,13 +35,17 @@ function mostrarProductos(productos) {
       col.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3", "mb-3");
 
       const card = document.createElement("div");
-      card.classList.add("card", "h-20");
+      card.classList.add("card", "h-100", "position-relative", "overflow-hidden");
 
       const imagen = producto.imagenes
         ? producto.imagenes
         : "../assets/pintura.jpeg"; // imagen por defecto
 
       card.innerHTML = `
+        <button class="btn-favorito" data-id="${producto.id_producto}" title="Agregar a favoritos">
+          <i class="fas fa-heart"></i>
+        </button>
+
         <div class="card-body">
           <a href="../paginas/producto.html" class="text-decoration-none text-dark">
             <div class="card-content">
@@ -50,7 +53,9 @@ function mostrarProductos(productos) {
               <h3 class="card-title">${producto.nombre}</h3>
               <h5 class="card-price">$${producto.precio}</h5>
               <p class="card-text">${producto.descripcion}</p>
-              <button class="card-button btn btn-primary mt-2" data-id="${producto.id_producto}">Agregar al carrito</button>
+              <button class="card-button btn btn-primary mt-2" data-id="${producto.id_producto}">
+                <i class="fas fa-shopping-cart me-2"></i>Agregar al carrito
+              </button>
             </div>
           </a>
         </div>
@@ -61,6 +66,7 @@ function mostrarProductos(productos) {
     });
   }
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const buscador = document.getElementById('buscador');
@@ -291,12 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updateCartCount();
 
       // Feedback visual sencillo
-      btn.classList.add('btn-success');
-      btn.textContent = 'Agregado';
-      setTimeout(() => {
-        btn.classList.remove('btn-success');
-        btn.textContent = 'Agregar al carrito';
-      }, 1200);
+      btn.innerHTML = '<span class="text"><i class="fas fa-check-circle me-2"></i>Agregado</span>';
     } catch (err) {
       console.error('Error agregando al carrito:', err);
       alert('No se pudo agregar el producto al carrito. Intente nuevamente.');
@@ -376,23 +377,60 @@ document.addEventListener("click", (e) => {
 // ⚙️ Función para actualizar el menú del usuario después del login
 // =========================
 async function updateUserMenu() {
-  const res = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=login", {
-    method: "GET",
-    credentials: "include"
-  });
-  const data = await res.json();
+  try {
+    const res = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=login", {
+      method: "GET",
+      credentials: "include"
+    });
 
-  const userDropdown = document.getElementById("userDropdown");
-  if (data.success && data.user) {
-    userDropdown.innerHTML = `
-      <li><a class="dropdown-item disabled"><i class="fas fa-user me-2"></i>${data.user.nombre}</a></li>
-      <li><a id="btnLogout" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>
-    `;
-  } else {
-    userDropdown.innerHTML = `
-      <li><a id="btnLogin" class="dropdown-item"><i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión</a></li>
-      <li><a id="btnRegistrarse" class="dropdown-item"><i class="fas fa-user-plus me-2"></i>Registrarse</a></li>
-    `;
+    const data = await res.json();
+    const userDropdown = document.getElementById("userDropdown");
+    const navbar = document.querySelector(".navbar-nav.me-auto"); // contenedor de la izquierda (categorías)
+
+    if (!userDropdown) return;
+
+    if (data.success && data.user) {
+      // 🔹 Guardar usuario en localStorage
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // 🔹 Actualizar el dropdown del usuario
+      userDropdown.innerHTML = `
+        <li><a class="dropdown-item disabled"><i class="fas fa-user me-2"></i>${data.user.nombre}</a></li>
+        <li><a id="btnLogout" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>
+      `;
+
+      // 🔹 Mostrar botón Admin Panel si el usuario es admin
+      if (data.user.admin && Number(data.user.admin) === 1) {
+        // Evitar duplicar el botón si ya existe
+        if (!document.querySelector("#admin-panel-btn")) {
+          const adminBtn = document.createElement("li");
+          adminBtn.className = "nav-item";
+          adminBtn.innerHTML = `
+            <a id="admin-panel-btn" class="nav-link text" href="../admin_panel/administrador.html">
+              <i class="fas fa-tools me-2"></i>Admin Panel
+            </a>
+          `;
+          navbar.appendChild(adminBtn);
+        }
+      }
+
+    } else {
+      // 🔹 Eliminar user del localStorage
+      localStorage.removeItem("user");
+
+      // 🔹 Dropdown para usuario no logueado
+      userDropdown.innerHTML = `
+        <li><a id="btnLogin" class="dropdown-item"><i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión</a></li>
+        <li><a id="btnRegistrarse" class="dropdown-item"><i class="fas fa-user-plus me-2"></i>Registrarse</a></li>
+      `;
+
+      // 🔹 Si había botón admin, lo eliminamos
+      const existingAdminBtn = document.querySelector("#admin-panel-btn");
+      if (existingAdminBtn) existingAdminBtn.remove();
+    }
+
+  } catch (error) {
+    console.error("Error actualizando menú de usuario:", error);
   }
 }
 

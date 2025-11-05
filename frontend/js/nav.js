@@ -27,6 +27,10 @@ async function updateUserMenu() {
     return;
   }
 
+  // 🔹 Quitar cualquier botón de admin previo (para evitar duplicados)
+  const oldAdminBtn = document.getElementById('admin-panel-btn');
+  if (oldAdminBtn) oldAdminBtn.remove();
+
   if (user) {
     // Si hay usuario logueado
     if (profileToggleSpan) {
@@ -83,8 +87,8 @@ async function cerrarSesion(event) {
   }
 }
 
+// Esperar a que el navbar esté en el DOM
 document.addEventListener('DOMContentLoaded', async () => {
-  // Esperar a que el navbar esté en el DOM
   const interval = setInterval(() => {
     if (document.querySelector('#userDropdown')) {
       updateUserMenu();
