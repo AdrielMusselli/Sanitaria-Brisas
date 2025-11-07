@@ -3,6 +3,22 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
+$requestMethod = $_SERVER["REQUEST_METHOD"];
+
+if ($requestMethod !== 'POST') {
+if (isset $_FILES["imagenes"]) {
+    $extension = pathinfo($_FILES["imagenes"]["name"], PATHINFO_EXTENSION);
+    move_uploaded_file($_FILES["imagenes"]["tmp_name"], "../assets/" . '.' . $extension);
+    $resultado = '../assets/' . '.' . $extension;
+    echo json_encode([
+        "ruta" => $resultado
+    ]);
+    $fileName = uniqid() . '.' . basename($_FILES['imagenes']['name']) . $extension;
+    $uploadFile = '../assets/' . $fileName . $extension;
+    exit;
+}
+}
+/*
 function handleImageUpload() {
     $target_dir = "../assets/";
     

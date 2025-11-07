@@ -11,7 +11,7 @@
 
   document.getElementById("productoForm").addEventListener("submit", agregarProducto)
 
-  API_URL = "http://localhost/Sanitaria-brisas/backend/Api/api.php";
+  API_URL = "http://localhost/Sanitaria-Brisas/backend/Api/api.php";
 
 async function obtenerPedidos() {
   try {
@@ -166,13 +166,16 @@ async function agregarProducto(e) {
   formData.append("precio", document.getElementById("precio").value)
   formData.append("stock", document.getElementById("stock").value)
   formData.append("categoria", document.getElementById("categoria").value)
+  // Agregar imagen si existe (se enviará más abajo junto al resto del formulario)
+  const imgFile = document.getElementById("imagenes").files[0];
+  if (imgFile) formData.append("imagenes", imgFile);
   
-  // Manejar la imagen
+  /* Manejar la imagen
   const imagenesInput = document.getElementById("imagenes");
   if (imagenesInput.files.length > 0) {
     try {
       const imageFormData = new FormData();
-      imageFormData.append("imagenes", imagenesInput.files[0]);
+      imageFormData.append("imagenes", imagenesInput);
       
       const uploadResponse = await fetch("http://localhost/Sanitaria-brisas/backend/Api/upload.php", {
         method: "POST",
@@ -193,7 +196,7 @@ async function agregarProducto(e) {
       return;
     }
   }
-  
+  */
   try {
     const response = await fetch(API_URL + "?seccion=producto", {
       method: "POST",

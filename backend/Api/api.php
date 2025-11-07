@@ -9,11 +9,33 @@ header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
 header('Access-Control-Max-Age: 86400');
 
 // ==============================
-// Manejo de errores
+// Manejo de errores (suprimir salida HTML y devolver JSON en fallos)
 // ==============================
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 error_reporting(E_ALL);
+
+set_error_handler(function ($severity, $message, $file, $line) {
+    // Convertir warnings/notices en excepciones para manejarlos uniformemente
+    throw new ErrorException($message, 0, $severity, $file, $line);
+});
+
+set_exception_handler(function ($e) {
+    if (!headers_sent()) header('Content-Type: application/json; charset=utf-8');
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Error interno del servidor', 'error' => $e->getMessage()]);
+    exit;
+});
+
+register_shutdown_function(function () {
+    $err = error_get_last();
+    if ($err && in_array($err['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        if (!headers_sent()) header('Content-Type: application/json; charset=utf-8');
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Error fatal en el servidor', 'error' => $err['message']]);
+        exit;
+    }
+});
 
 // ==============================
 // Requerimientos de controladores
@@ -87,14 +109,28 @@ if ($requestMethod == "POST") {
     switch ($seccion) {
 
         case "producto":
-            agregarProducto(
-                $input['nombre'] ?? null,
-                $input['categoria'] ?? null,
-                $input['precio'] ?? null,
-                $input['stock'] ?? null,
-                $input['descripcion'] ?? null,
-                $input['imagenes'] ?? null
-            );
+            // Preferir valores de $_POST (multipart/form-data) si existen
+            $nombre = $_POST['nombre'] ?? $input['nombre'] ?? null;
+            $categoria = $_POST['categoria'] ?? $input['categoria'] ?? null;
+            $precio = $_POST['precio'] ?? $input['precio'] ?? null;
+            $stock = $_POST['stock'] ?? $input['stock'] ?? null;
+            $descripcion = $_POST['descripcion'] ?? $input['descripcion'] ?? null;
+            $imagenes = $_POST['imagenes'] ?? $input['imagenes'] ?? null;
+
+            // Si se subió un archivo, moverlo a assets/ y usar su ruta
+            if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
+                $file = $_FILES['imagenes'];
+                $fileName = uniqid() . '_' . basename($file['name']);
+                $uploadDir = __DIR__ . '/../assets/';
+                if (!file_exists($uploadDir)) @mkdir($uploadDir, 0777, true);
+                $target = $uploadDir . $fileName;
+                if (is_uploaded_file($file['tmp_name']) && move_uploaded_file($file['tmp_name'], $target)) {
+                    // Guardar ruta relativa en la BD
+                    $imagenes = 'assets/' . $fileName;
+                }
+            }
+
+            agregarProducto($nombre, $categoria, $precio, $stock, $descripcion, $imagenes);
             break;
 
         case "pedido":

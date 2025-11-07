@@ -39,7 +39,7 @@ function mostrarProductos(productos) {
 
       const imagen = producto.imagenes
         ? producto.imagenes
-        : "../assets/pintura.jpeg"; // imagen por defecto
+        : "../../backend/assets/"; // imagen por defecto
 
       card.innerHTML = `
         <button class="btn-favorito" data-id="${producto.id_producto}" title="Agregar a favoritos">
@@ -49,7 +49,7 @@ function mostrarProductos(productos) {
         <div class="card-body">
           <a href="../paginas/producto.html" class="text-decoration-none text-dark">
             <div class="card-content">
-              <img src="${imagen}" alt="${producto.nombre}" class="img-fluid mb-3 rounded">
+              <img src="${producto.imagenes}" alt="${producto.nombre}" class="img-fluid mb-3 rounded">
               <h3 class="card-title">${producto.nombre}</h3>
               <h5 class="card-price">$${producto.precio}</h5>
               <p class="card-text">${producto.descripcion}</p>

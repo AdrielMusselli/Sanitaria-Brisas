@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-11-2025 a las 00:58:01
+-- Tiempo de generación: 07-11-2025 a las 20:45:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -70,7 +70,8 @@ INSERT INTO `producto` (`id_producto`, `nombre`, `categoria`, `precio`, `stock`,
 (17, 'ladrillos', 'Construccion', 700.00, 30, 'construccion prueba', '../assets/pintura.jpeg'),
 (18, 'Pintura en oferta', 'Ofertas', 10.00, 10, 'Pintura en oferta', '../assets/pintura.jpeg'),
 (19, 'pintura', 'Pinturas', 40.00, 20, 'pintura descripcion', '../assets/pintura.jpeg'),
-(23, 'producto', 'Herramientas', 1.00, 22, 'prueba', '../assets/pintura.jpeg');
+(23, 'producto', 'Herramientas', 1.00, 22, 'prueba', '../assets/pintura.jpeg'),
+(30, 'taladro', 'Herramientas', 15000.00, 100, 'Mecha corta con acople', 'assets/690e4a51b0728_D_891497-MLU86486712488_062025-F-300x300.jpg');
 
 -- --------------------------------------------------------
 
@@ -135,7 +136,7 @@ ALTER TABLE `pedido`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
