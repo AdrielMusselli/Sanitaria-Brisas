@@ -39,7 +39,7 @@ function mostrarProductos(productos) {
 
       const imagen = producto.imagenes
         ? producto.imagenes
-        : "../../backend/assets/"; // imagen por defecto
+        : "../../backend/";
 
       card.innerHTML = `
         <button class="btn-favorito" data-id="${producto.id_producto}" title="Agregar a favoritos">
@@ -47,7 +47,7 @@ function mostrarProductos(productos) {
         </button>
 
         <div class="card-body">
-          <a href="../paginas/producto.html" class="text-decoration-none text-dark">
+          <a href="producto.html?id=${producto.id_producto}" class="text-decoration-none text-dark">
             <div class="card-content">
               <img src="${producto.imagenes}" alt="${producto.nombre}" class="img-fluid mb-3 rounded">
               <h3 class="card-title">${producto.nombre}</h3>
@@ -390,16 +390,16 @@ async function updateUserMenu() {
     if (!userDropdown) return;
 
     if (data.success && data.user) {
-      // 🔹 Guardar usuario en localStorage
+      //  Guardar usuario en localStorage
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      // 🔹 Actualizar el dropdown del usuario
+      //  Actualizar el dropdown del usuario
       userDropdown.innerHTML = `
         <li><a class="dropdown-item disabled"><i class="fas fa-user me-2"></i>${data.user.nombre}</a></li>
         <li><a id="btnLogout" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>
       `;
 
-      // 🔹 Mostrar botón Admin Panel si el usuario es admin
+      // Mostrar botón Admin Panel si el usuario es admin
       if (data.user.admin && Number(data.user.admin) === 1) {
         // Evitar duplicar el botón si ya existe
         if (!document.querySelector("#admin-panel-btn")) {
@@ -415,16 +415,15 @@ async function updateUserMenu() {
       }
 
     } else {
-      // 🔹 Eliminar user del localStorage
+      // Eliminar del localStorage
       localStorage.removeItem("user");
 
-      // 🔹 Dropdown para usuario no logueado
+      // Dropdown para usuario no logueado
       userDropdown.innerHTML = `
         <li><a id="btnLogin" class="dropdown-item"><i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión</a></li>
         <li><a id="btnRegistrarse" class="dropdown-item"><i class="fas fa-user-plus me-2"></i>Registrarse</a></li>
       `;
 
-      // 🔹 Si había botón admin, lo eliminamos
       const existingAdminBtn = document.querySelector("#admin-panel-btn");
       if (existingAdminBtn) existingAdminBtn.remove();
     }
@@ -434,9 +433,8 @@ async function updateUserMenu() {
   }
 }
 
-// =========================
 // 🔑 LOGIN
-// =========================
+
 if (loginForm) {
   const errorDiv = document.createElement("div");
   errorDiv.className = "alert alert-danger d-none mt-3";
@@ -481,9 +479,8 @@ if (loginForm) {
   });
 }
 
-// =========================
 // 🧾 REGISTRO
-// =========================
+
 if (registroForm) {
   const registroErrorDiv = document.createElement("div");
   registroErrorDiv.className = "alert alert-danger d-none mt-3";
@@ -550,9 +547,8 @@ if (registroForm) {
 }
 
 
-// =========================
 // 🚪 LOGOUT
-// =========================
+
 document.addEventListener("click", async (e) => {
   const logoutBtn = e.target.closest("#btnLogout");
   if (logoutBtn) {
@@ -566,9 +562,35 @@ document.addEventListener("click", async (e) => {
     }
   }
 });
+ // mostrar modal de login si no esta iniciado sesion al tocar el boton de carrito
+document.addEventListener("DOMContentLoaded", () => {
+  const cartLink = document.getElementById("cart-link");
+
+  cartLink.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    try {
+      let user = null;
+
+      if (typeof checkSession === "function") {
+        user = await checkSession();
+      }
+
+      if (user) {
+        window.location.href = "../paginas/carrrito.html";
+      } else {
+        const loginModal = document.getElementById("loginModal");
+        if (loginModal) {
+          loginModal.style.display = "block";
+        }
+      }
+    } catch (error) {
+    }
+  });
+});
+
 
 // =========================
 // 🔁 Al cargar la página, verificar sesión activa
 // =========================
 document.addEventListener("DOMContentLoaded", updateUserMenu);
-
