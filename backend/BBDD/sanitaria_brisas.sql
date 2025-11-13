@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-11-2025 a las 20:45:38
+-- Tiempo de generación: 11-11-2025 a las 20:17:09
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -71,7 +71,22 @@ INSERT INTO `producto` (`id_producto`, `nombre`, `categoria`, `precio`, `stock`,
 (18, 'Pintura en oferta', 'Ofertas', 10.00, 10, 'Pintura en oferta', '../assets/pintura.jpeg'),
 (19, 'pintura', 'Pinturas', 40.00, 20, 'pintura descripcion', '../assets/pintura.jpeg'),
 (23, 'producto', 'Herramientas', 1.00, 22, 'prueba', '../assets/pintura.jpeg'),
-(30, 'taladro', 'Herramientas', 15000.00, 100, 'Mecha corta con acople', 'assets/690e4a51b0728_D_891497-MLU86486712488_062025-F-300x300.jpg');
+(32, 'prueba ', 'Herramientas', 497.00, 937, 'dñfkjbn', 'assets/69137de4cc5a4_D_891497-MLU86486712488_062025-F-300x300.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `reseña`
+--
+
+CREATE TABLE `reseña` (
+  `id_reseña` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `comentario` text DEFAULT NULL,
+  `puntuacion` int(11) DEFAULT NULL CHECK (`puntuacion` between 1 and 5),
+  `fecha` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -116,6 +131,14 @@ ALTER TABLE `producto`
   ADD PRIMARY KEY (`id_producto`);
 
 --
+-- Indices de la tabla `reseña`
+--
+ALTER TABLE `reseña`
+  ADD PRIMARY KEY (`id_reseña`),
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `id_producto` (`id_producto`);
+
+--
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
@@ -136,7 +159,13 @@ ALTER TABLE `pedido`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT de la tabla `reseña`
+--
+ALTER TABLE `reseña`
+  MODIFY `id_reseña` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
@@ -153,6 +182,13 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `pedido`
   ADD CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
+
+--
+-- Filtros para la tabla `reseña`
+--
+ALTER TABLE `reseña`
+  ADD CONSTRAINT `reseña_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reseña_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
