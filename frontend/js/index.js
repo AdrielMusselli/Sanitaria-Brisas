@@ -45,12 +45,12 @@ function mostrarProductos(productos) {
         </button>
 
         <div class="card-body">
-          <a href="../paginas/producto.html" class="text-decoration-none text-dark">
+          <!-- Agregar parámetro de ID a la URL del producto -->
+          <a href="../paginas/producto.html?id=${producto.id_producto}" class="text-decoration-none text-dark">
             <div class="card-content">
-              <img src="${imagen}" alt="${producto.nombre}" class="img-fluid mb-3 rounded" onerror="this.src='https://via.placeholder.com/300x300?text=Sin+Imagen'">
+              <img src="http://localhost/Sanitaria-Brisas/backend/${imagen}" alt="${producto.nombre}" class="img-fluid mb-3 rounded" onerror="this.src='https://via.placeholder.com/300x300?text=Sin+Imagen'">
               <h3 class="card-title">${producto.nombre}</h3>
               <h5 class="card-price">$${producto.precio}</h5>
-              <p class="card-text">${producto.descripcion}</p>
               <button class="card-button btn btn-primary mt-2" data-id="${producto.id_producto}">
                 <i class="fas fa-shopping-cart me-2"></i>Agregar al carrito
               </button>
@@ -64,7 +64,6 @@ function mostrarProductos(productos) {
     });
   }
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const buscador = document.getElementById('buscador');

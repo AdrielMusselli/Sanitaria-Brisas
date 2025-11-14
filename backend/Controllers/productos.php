@@ -7,9 +7,18 @@ $productoModel = new Producto($pdo); // Instancia del modelo
 
 function obtenerProducto() {
     global $productoModel;
-    // Si se pasa ?categoria=xxx en GET, devolver sólo esa categoría
+    $id = $_GET['id'] ?? null;
     $categoria = $_GET['categoria'] ?? null;
-    if ($categoria) {
+    
+    if ($id) {
+        // Obtener producto específico por ID
+        $producto = $productoModel->obtenerPorId($id);
+        if ($producto) {
+            echo json_encode([$producto]);
+        } else {
+            echo json_encode([]);
+        }
+    } elseif ($categoria) {
         // Llamar al modelo para obtener por categoría
         echo json_encode($productoModel->obtenerPorCategoria($categoria));
     } else {

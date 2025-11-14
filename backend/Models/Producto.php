@@ -32,6 +32,13 @@ class Producto {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function obtenerPorId($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM producto WHERE id_producto = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     // Método para agregar un nuevo producto a la base de datos
     public function agregarProducto($nombre, $categoria, $precio, $stock, $descripcion, $imagenes) {
         // Prepara la consulta SQL para insertar un nuevo registro en la tabla 'producto'
