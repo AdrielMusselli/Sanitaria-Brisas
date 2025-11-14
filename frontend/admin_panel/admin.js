@@ -130,16 +130,26 @@ function renderizarProductos(data) {
   }
 
   tbody.innerHTML = data
-    .map(
-      (producto) => `
+    .map((producto) => {
+      // Construir src absoluto para la imagen devuelta por el backend.
+      // El backend guarda rutas como 'assets/filename.jpg' (ruta relativa al directorio backend/).
+      // Si la ruta ya es absoluta (http) o es un placeholder, usarla tal cual.
+      let imgSrc = producto.imagenes || 'https://via.placeholder.com/50x50?text=?';
+      if (imgSrc && !imgSrc.startsWith('http') && !imgSrc.startsWith('/')) {
+        // Prepend the backend base URL para que el navegador no busque en admin_panel/
+        imgSrc = `http://localhost/Sanitaria-Brisas/backend/${imgSrc}`;
+      }
+
+      return `
         <tr>
           <td>${producto.id_producto}</td>
           <td>
             <div class="d-flex align-items-center">
-              <img src="${producto.imagen || '../assets/pintura.jpeg'}" 
+              <img src="${imgSrc}" 
                    alt="${producto.nombre}" 
                    class="me-2" 
-                   style="width: 50px; height: 50px; object-fit: cover;">
+                   style="width: 50px; height: 50px; object-fit: cover;"
+                   onerror="this.src='https://via.placeholder.com/50x50?text=?'">
               ${producto.nombre}
             </div>
           </td>
@@ -152,8 +162,8 @@ function renderizarProductos(data) {
             </button>
           </td>
         </tr>
-      `,
-    )
+      `;
+    })
     .join("")
 }
 async function agregarProducto(e) {
@@ -170,33 +180,6 @@ async function agregarProducto(e) {
   const imgFile = document.getElementById("imagenes").files[0];
   if (imgFile) formData.append("imagenes", imgFile);
   
-  /* Manejar la imagen
-  const imagenesInput = document.getElementById("imagenes");
-  if (imagenesInput.files.length > 0) {
-    try {
-      const imageFormData = new FormData();
-      imageFormData.append("imagenes", imagenesInput);
-      
-      const uploadResponse = await fetch("http://localhost/Sanitaria-brisas/backend/Api/upload.php", {
-        method: "POST",
-        body: imageFormData
-      });
-      
-      const uploadResult = await uploadResponse.json();
-      
-      if (uploadResult.success) {
-        formData.append("imagenes", uploadResult.path);
-        console.log("Ruta de imagen agregada:", uploadResult.path);
-      } else {
-        throw new Error(uploadResult.message);
-      }
-    } catch (error) {
-      console.error("Error subiendo imagen:", error);
-      alert("Error al subir la imagen: " + error.message);
-      return;
-    }
-  }
-  */
   try {
     const response = await fetch(API_URL + "?seccion=producto", {
       method: "POST",

@@ -2,15 +2,22 @@
 // URL base de tu API
 const API_URL = "http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=producto";
 
-// 🔍 Obtener el parámetro "id" de la URL
+// 🔍 Obtener el parámetro "id" de la URL o desde localStorage
 const params = new URLSearchParams(window.location.search);
-const idProducto = params.get("id");
+let idProducto = params.get("id");
+
+// Si no viene en la URL, intentar obtener de localStorage (navegación desde index.js)
+if (!idProducto) {
+  idProducto = localStorage.getItem('selectedProductId');
+}
+
 console.log("ID del producto recibido:", idProducto);
 
 // 🔹 Referencias a elementos del DOM
 const tituloEl = document.querySelector(".product-title");
 const precioEl = document.querySelector(".product-price");
 const descripcionEl = document.querySelector("#description p");
+const imagenEl = document.querySelector(".main-image");
 const stockEl = document.createElement("p"); // agregaremos debajo del precio
 stockEl.classList.add("text-muted", "mt-2");
 
@@ -25,15 +32,15 @@ if (priceSection && !priceSection.querySelector(".stock-info")) {
 // 🔄 Función para obtener y mostrar el producto
 // ============================
 async function cargarProducto() {
-  if (!productoId) {
-    console.error("❌ No se proporcionó un ID de producto en la URL.");
+  if (!idProducto) {
+    console.error(" No se proporcionó un ID de producto en la URL.");
     tituloEl.textContent = "Producto no encontrado";
     descripcionEl.textContent = "No se pudo cargar la información del producto.";
     return;
   }
 
   try {
-    const response = await fetch(`${API_URL}&id=${productoId}`);
+    const response = await fetch(`${API_URL}&id=${idProducto}`);
     if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
     const data = await response.json();
@@ -54,6 +61,23 @@ async function cargarProducto() {
     precioEl.textContent = `UYU $${producto.precio || "0.00"}`;
     descripcionEl.textContent = producto.descripcion || "Sin descripción disponible.";
     stockEl.textContent = `Stock disponible: ${producto.stock ?? "No especificado"}`;
+    
+    // Resolver y mostrar imagen
+    if (imagenEl) {
+      let imgSrc = producto.imagenes || producto.imagen || "";
+      if (imgSrc && !imgSrc.startsWith('http') && !imgSrc.startsWith('/')) {
+        imgSrc = 'http://localhost/Sanitaria-Brisas/backend/assets' + imgSrc;
+      }
+      if (!imgSrc) {
+        imgSrc = 'http://localhost/Sanitaria-Brisas/frontend/assets/1761440847_master.png';
+      }
+      imagenEl.src = imgSrc;
+      imagenEl.onerror = function() {
+        this.src = 'http://localhost/Sanitaria-Brisas/frontend/assets/1761440847_master.png';
+      };
+    }
+    
+
 
 
   } catch (error) {

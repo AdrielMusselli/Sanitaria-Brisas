@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-11-2025 a las 20:17:09
+-- Tiempo de generación: 14-11-2025 a las 01:43:09
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `sanitaria_brisas`
+-- Base de datos: `sanitaria brisas`
 --
 
 -- --------------------------------------------------------
@@ -64,14 +64,15 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`id_producto`, `nombre`, `categoria`, `precio`, `stock`, `descripcion`, `imagenes`) VALUES
-(14, 'llave inglesa', 'herramientas', 50.00, 10, 'ejemplo', '../assets/pintura.jpeg'),
-(15, 'Pintura', 'Pinturas', 70.00, 20, 'pintura blanca', '../assets/pintura.jpeg'),
-(16, 'Techo', 'Techos', 20.00, 20, 'Techo prueba', '../assets/pintura.jpeg'),
-(17, 'ladrillos', 'Construccion', 700.00, 30, 'construccion prueba', '../assets/pintura.jpeg'),
-(18, 'Pintura en oferta', 'Ofertas', 10.00, 10, 'Pintura en oferta', '../assets/pintura.jpeg'),
-(19, 'pintura', 'Pinturas', 40.00, 20, 'pintura descripcion', '../assets/pintura.jpeg'),
-(23, 'producto', 'Herramientas', 1.00, 22, 'prueba', '../assets/pintura.jpeg'),
-(32, 'prueba ', 'Herramientas', 497.00, 937, 'dñfkjbn', 'assets/69137de4cc5a4_D_891497-MLU86486712488_062025-F-300x300.jpg');
+(41, 'tenaza', 'Herramientas', 1500.00, 100, 'La tenaza es una herramienta manual resistente y versátil, fabricada en acero de alta calidad, ideal para trabajos de construcción, carpintería y uso general en el hogar. Diseñada para ofrecer un agarre firme y preciso, permite sujetar, torcer y cortar alambres con facilidad. Su mango ergonómico proporciona comodidad y control durante el uso prolongado, convirtiéndola en una herramienta indispensable para profesionales y aficionados.', 'assets/69166ac80b17c_descarga.jfif'),
+(43, 'serrucho', 'Herramientas', 2000.00, 200, 'El serrucho es una herramienta manual indispensable para realizar cortes rápidos y precisos en madera. Su hoja de acero al carbono, afilada y resistente, ofrece un rendimiento óptimo incluso en trabajos exigentes. El mango ergonómico proporciona un agarre cómodo y seguro, facilitando el control durante el uso. Perfecto para carpintería, bricolaje y tareas de construcción, el serrucho combina durabilidad, eficiencia y facilidad de manejo.', 'assets/69166b3b60954_serrucho.jfif'),
+(44, 'taladro', 'Herramientas', 3000.00, 100, 'El taladro es una herramienta eléctrica indispensable para perforar madera, metal, plástico y mampostería con precisión y rapidez. Equipado con un motor potente y múltiples velocidades, permite adaptarse a distintos tipos de trabajo. Su diseño ergonómico y liviano brinda mayor comodidad y control, reduciendo la fatiga durante el uso prolongado. Ideal para profesionales y usuarios domésticos, el taladro ofrece versatilidad, potencia y durabilidad en todo tipo de proyectos.', 'assets/69166b8703a24_taladro.jfif'),
+(45, 'sierra', 'Herramientas', 4500.00, 50, 'La sierra es una herramienta esencial para cortes precisos en madera, plástico y otros materiales. Fabricada con una hoja de acero templado de alta resistencia, garantiza un corte limpio y uniforme. Su diseño ergonómico permite un manejo cómodo y seguro, reduciendo la fatiga en trabajos prolongados. Ideal para carpinteros, técnicos y usuarios domésticos que buscan calidad, durabilidad y rendimiento en cada proyecto.', 'assets/69166bca8e618_sierra.jfif'),
+(46, 'IsoPanel', 'Techos', 2000.00, 400, 'El isopanel para techos es un panel termoaislante compuesto por dos láminas de acero galvanizado y un núcleo de espuma rígida de poliuretano o poliestireno, diseñado para brindar excelente aislamiento térmico y acústico. Su estructura liviana, resistente y de alta durabilidad lo convierte en una solución ideal para viviendas, galpones, comercios e instalaciones industriales. Además, ofrece una instalación rápida y limpia, con un acabado estético moderno y gran resistencia a la humedad y la corrosión. Perfecto para quienes buscan eficiencia energética, confort y larga vida útil en sus construcciones.', 'assets/69166e5ce4de7_isopanel.jfif'),
+(47, 'Chapa', 'Techos', 1500.00, 150, 'La chapa para techo es una solución resistente y duradera para la cobertura de viviendas, galpones, comercios y estructuras rurales. Fabricada en acero galvanizado o prepintado, ofrece alta protección contra la corrosión, gran capacidad de drenaje y excelente comportamiento frente a las inclemencias del tiempo. Su diseño acanalado o trapezoidal brinda rigidez estructural y facilita la instalación, asegurando un techado liviano, económico y de larga vida útil. Ideal para proyectos que requieren fortaleza, practicidad y bajo mantenimiento.', 'assets/69166e9a9fff5_chapa.jfif'),
+(48, 'Pintura', 'Pinturas', 1500.00, 250, 'La pintura es un recubrimiento de alta calidad diseñado para proteger y embellecer superficies interiores y exteriores. Formulada con componentes duraderos, ofrece excelente adherencia, cobertura uniforme y resistencia al desgaste. Disponible en una amplia variedad de colores y acabados, permite renovar paredes, metales, maderas y otras superficies con resultados profesionales. Su secado rápido y fácil aplicación la convierten en una opción ideal tanto para usuarios domésticos como para trabajos profesionales.', 'assets/69166ee615b77_pintura.jfif'),
+(49, 'Ladrillos', 'Construccion', 150.00, 1000, 'Los ladrillos son materiales de construcción resistentes y duraderos, fabricados con arcilla cocida o cemento, ideales para levantar muros, tabiques y estructuras sólidas. Su diseño uniforme permite una colocación rápida y precisa, garantizando estabilidad y un excelente comportamiento estructural. Ofrecen aislamiento térmico, buena resistencia a la humedad y larga vida útil, convirtiéndolos en una opción confiable tanto para obras nuevas como para remodelaciones. Disponibles en diversos formatos, los ladrillos se adaptan a todo tipo de proyectos, desde viviendas hasta construcciones comerciales.', 'assets/69166f47124a4_ladrillo.jfif'),
+(50, 'Portland', 'Construccion', 500.00, 200, 'El cemento Portland es un material de construcción esencial, elaborado a partir de clinker y yeso, diseñado para obtener concreto y mortero de alta resistencia. Su rápida fraguabilidad y excelente adherencia lo hacen ideal para obras civiles, construcción de viviendas, pavimentos y reparaciones en general. Garantiza durabilidad, estabilidad estructural y resistencia a la compresión, convirtiéndolo en la opción confiable para proyectos que requieren solidez y larga vida útil. Disponible en sacos de distintas capacidades, facilita el manejo y almacenamiento en obra.', 'assets/69166f92b304e_porlan.jfif');
 
 -- --------------------------------------------------------
 
@@ -159,7 +160,7 @@ ALTER TABLE `pedido`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT de la tabla `reseña`

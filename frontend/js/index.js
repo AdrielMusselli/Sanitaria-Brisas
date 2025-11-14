@@ -37,9 +37,7 @@ function mostrarProductos(productos) {
       const card = document.createElement("div");
       card.classList.add("card", "h-100", "position-relative", "overflow-hidden");
 
-      const imagen = producto.imagenes
-        ? producto.imagenes
-        : "../../backend/";
+      const imagen = producto.imagenes || 'https://via.placeholder.com/300x300?text=Sin+Imagen';
 
       card.innerHTML = `
         <button class="btn-favorito" data-id="${producto.id_producto}" title="Agregar a favoritos">
@@ -47,9 +45,9 @@ function mostrarProductos(productos) {
         </button>
 
         <div class="card-body">
-          <a href="producto.html?id=${producto.id_producto}" class="text-decoration-none text-dark">
+          <a href="../paginas/producto.html" class="text-decoration-none text-dark">
             <div class="card-content">
-              <img src="${producto.imagenes}" alt="${producto.nombre}" class="img-fluid mb-3 rounded">
+              <img src="${imagen}" alt="${producto.nombre}" class="img-fluid mb-3 rounded" onerror="this.src='https://via.placeholder.com/300x300?text=Sin+Imagen'">
               <h3 class="card-title">${producto.nombre}</h3>
               <h5 class="card-price">$${producto.precio}</h5>
               <p class="card-text">${producto.descripcion}</p>
