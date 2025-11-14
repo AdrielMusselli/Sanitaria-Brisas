@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function obtenerProductos() {
     try {
-      const response = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=producto");
+      const response = await fetch("http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=producto");
 
       // Verificamos si la respuesta HTTP es válida
       if (!response.ok) {
@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
           // Pedir al backend sólo los productos de la categoría
-          const url = `http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=producto&categoria=${encodeURIComponent(categoriaFormateada)}`;
+          const url = `http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=producto&categoria=${encodeURIComponent(categoriaFormateada)}`;
           const resp = await fetch(url);
           if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
           const data = await resp.json();
@@ -376,7 +376,7 @@ document.addEventListener("click", (e) => {
 // =========================
 async function updateUserMenu() {
   try {
-    const res = await fetch("http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=login", {
+    const res = await fetch("http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=login", {
       method: "GET",
       credentials: "include"
     });
@@ -508,7 +508,7 @@ if (registroForm) {
     };
 
     try {
-      const res = await fetch('http://localhost/Sanitaria-brisas/backend/Api/api.php', {
+      const res = await fetch('http://localhost/Sanitaria-Brisas/backend/Api/api.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -549,7 +549,7 @@ if (registroForm) {
 document.addEventListener("click", async (e) => {
   const logoutBtn = e.target.closest("#btnLogout");
   if (logoutBtn) {
-    const res = await fetch('http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=logout', {
+    const res = await fetch('http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=logout', {
       method: 'POST',
       credentials: 'include'
     });

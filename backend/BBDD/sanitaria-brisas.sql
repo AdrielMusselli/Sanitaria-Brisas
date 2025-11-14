@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-11-2025 a las 01:43:09
+-- Tiempo de generación: 14-11-2025 a las 16:50:55
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `sanitaria brisas`
+-- Base de datos: `sanitaria-brisas`
 --
 
 -- --------------------------------------------------------
@@ -72,7 +72,8 @@ INSERT INTO `producto` (`id_producto`, `nombre`, `categoria`, `precio`, `stock`,
 (47, 'Chapa', 'Techos', 1500.00, 150, 'La chapa para techo es una solución resistente y duradera para la cobertura de viviendas, galpones, comercios y estructuras rurales. Fabricada en acero galvanizado o prepintado, ofrece alta protección contra la corrosión, gran capacidad de drenaje y excelente comportamiento frente a las inclemencias del tiempo. Su diseño acanalado o trapezoidal brinda rigidez estructural y facilita la instalación, asegurando un techado liviano, económico y de larga vida útil. Ideal para proyectos que requieren fortaleza, practicidad y bajo mantenimiento.', 'assets/69166e9a9fff5_chapa.jfif'),
 (48, 'Pintura', 'Pinturas', 1500.00, 250, 'La pintura es un recubrimiento de alta calidad diseñado para proteger y embellecer superficies interiores y exteriores. Formulada con componentes duraderos, ofrece excelente adherencia, cobertura uniforme y resistencia al desgaste. Disponible en una amplia variedad de colores y acabados, permite renovar paredes, metales, maderas y otras superficies con resultados profesionales. Su secado rápido y fácil aplicación la convierten en una opción ideal tanto para usuarios domésticos como para trabajos profesionales.', 'assets/69166ee615b77_pintura.jfif'),
 (49, 'Ladrillos', 'Construccion', 150.00, 1000, 'Los ladrillos son materiales de construcción resistentes y duraderos, fabricados con arcilla cocida o cemento, ideales para levantar muros, tabiques y estructuras sólidas. Su diseño uniforme permite una colocación rápida y precisa, garantizando estabilidad y un excelente comportamiento estructural. Ofrecen aislamiento térmico, buena resistencia a la humedad y larga vida útil, convirtiéndolos en una opción confiable tanto para obras nuevas como para remodelaciones. Disponibles en diversos formatos, los ladrillos se adaptan a todo tipo de proyectos, desde viviendas hasta construcciones comerciales.', 'assets/69166f47124a4_ladrillo.jfif'),
-(50, 'Portland', 'Construccion', 500.00, 200, 'El cemento Portland es un material de construcción esencial, elaborado a partir de clinker y yeso, diseñado para obtener concreto y mortero de alta resistencia. Su rápida fraguabilidad y excelente adherencia lo hacen ideal para obras civiles, construcción de viviendas, pavimentos y reparaciones en general. Garantiza durabilidad, estabilidad estructural y resistencia a la compresión, convirtiéndolo en la opción confiable para proyectos que requieren solidez y larga vida útil. Disponible en sacos de distintas capacidades, facilita el manejo y almacenamiento en obra.', 'assets/69166f92b304e_porlan.jfif');
+(50, 'Portland', 'Construccion', 500.00, 200, 'El cemento Portland es un material de construcción esencial, elaborado a partir de clinker y yeso, diseñado para obtener concreto y mortero de alta resistencia. Su rápida fraguabilidad y excelente adherencia lo hacen ideal para obras civiles, construcción de viviendas, pavimentos y reparaciones en general. Garantiza durabilidad, estabilidad estructural y resistencia a la compresión, convirtiéndolo en la opción confiable para proyectos que requieren solidez y larga vida útil. Disponible en sacos de distintas capacidades, facilita el manejo y almacenamiento en obra.', 'assets/69166f92b304e_porlan.jfif'),
+(51, 'serruchito', 'Herramientas', 20000.00, 2222, 'sadasda', 'assets/69174eb244830_aaaa.jpg');
 
 -- --------------------------------------------------------
 
@@ -160,7 +161,7 @@ ALTER TABLE `pedido`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT de la tabla `reseña`

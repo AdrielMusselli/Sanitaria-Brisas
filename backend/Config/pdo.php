@@ -1,6 +1,6 @@
 <?php
     $host = "localhost";       // Servidor donde está la base de datos
-    $dbname = "sanitaria brisas";    // Nombre de la base de datos (usar guion bajo, coincide con el dump SQL)
+    $dbname = "sanitaria-brisas";    // Nombre de la base de datos
     $username = "root";        // Usuario de la base de datos
     $password = "";            // Contraseña (vacía por defecto)
 

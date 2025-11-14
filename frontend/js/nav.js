@@ -2,7 +2,7 @@
 async function checkSession() {
   try {
     const response = await fetch(
-      'http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=login',
+      'http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=login',
       { credentials: 'include' }
     );
     if (!response.ok) throw new Error('Network response was not ok');
@@ -70,7 +70,7 @@ async function cerrarSesion(event) {
   event.preventDefault();
   try {
     const response = await fetch(
-      'http://localhost/Sanitaria-brisas/backend/Api/api.php?seccion=logout',
+      'http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=logout',
       {
         method: 'POST',
         credentials: 'include',

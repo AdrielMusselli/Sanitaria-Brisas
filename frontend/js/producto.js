@@ -8,6 +8,9 @@ const producto = {
 
 console.log("ID del producto recibido:", producto.id_producto);
 
+// Variable global para almacenar los datos del producto
+let productoData = null;
+
 // 🔹 Referencias a elementos del DOM
 const tituloEl = document.querySelector(".product-title");
 const precioEl = document.querySelector(".product-price");
@@ -46,7 +49,7 @@ async function cargarProducto() {
     }
 
     // Si la API devuelve un solo objeto o un array
-    const productoData = Array.isArray(data) ? data[0] : data;
+    productoData = Array.isArray(data) ? data[0] : data;
 
     console.log("📦 Producto cargado:", productoData);
 
@@ -72,6 +75,122 @@ async function cargarProducto() {
 }
 
 // ============================
+// 🛒 Funciones del carrito
+// ============================
+function getCart() {
+  try {
+    const raw = localStorage.getItem('cart');
+    return raw ? JSON.parse(raw) : {};
+  } catch (err) {
+    console.error('Error leyendo carrito desde localStorage', err);
+    return {};
+  }
+}
+
+function saveCart(cart) {
+  try {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  } catch (err) {
+    console.error('Error guardando carrito en localStorage', err);
+  }
+}
+
+function updateCartCount() {
+  const cart = getCart();
+  const count = Object.values(cart).reduce((s, item) => s + Number(item.cantidad || 0), 0);
+  const cartLink = document.getElementById('cart-link');
+  if (!cartLink) return;
+
+  // Añadir badge si no existe
+  let badge = cartLink.querySelector('.cart-count-badge');
+  if (!badge) {
+    badge = document.createElement('span');
+    badge.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge';
+    badge.style.fontSize = '0.7rem';
+    badge.style.transform = 'translate(-10%, -40%)';
+    cartLink.appendChild(badge);
+  }
+
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// ============================
 // 🚀 Ejecutar al cargar la página
 // ============================
-document.addEventListener("DOMContentLoaded", cargarProducto);
+document.addEventListener("DOMContentLoaded", async () => {
+  await cargarProducto();
+  updateCartCount();
+
+  // Agregar al carrito
+  const addToCartBtn = document.querySelector('.btn-primary-custom');
+  if (addToCartBtn) {
+    addToCartBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      if (!productoData) {
+        alert('El producto aún no se ha cargado. Por favor espere.');
+        return;
+      }
+
+      // Verificar sesión
+      let user = null;
+      try {
+        if (typeof checkSession === 'function') {
+          user = await checkSession();
+        }
+      } catch (err) {
+        console.error('Error verificando sesión:', err);
+      }
+
+      if (!user) {
+        alert('Debes iniciar sesión para agregar productos al carrito.');
+        window.location.href = '../paginas/index.html';
+        return;
+      }
+
+      try {
+        const cart = getCart();
+        const productId = String(productoData.id_producto);
+
+        if (cart[productId]) {
+          cart[productId].cantidad = Number(cart[productId].cantidad) + 1;
+        } else {
+          const imagenPath = productoData.imagenes && productoData.imagenes.trim() 
+            ? `http://localhost/Sanitaria-Brisas/backend/${productoData.imagenes}` 
+            : null;
+          
+          cart[productId] = {
+            id: productId,
+            nombre: productoData.nombre,
+            precio: productoData.precio,
+            cantidad: 1,
+            imagen: imagenPath,
+            id_producto: productoData.id_producto
+          };
+        }
+
+        saveCart(cart);
+        updateCartCount();
+
+        // Cambiar texto del botón temporalmente
+        const originalHTML = addToCartBtn.innerHTML;
+        addToCartBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Agregado al Carrito';
+        addToCartBtn.disabled = true;
+
+        setTimeout(() => {
+          addToCartBtn.innerHTML = originalHTML;
+          addToCartBtn.disabled = false;
+        }, 2000);
+
+      } catch (err) {
+        console.error('Error agregando al carrito:', err);
+        alert('No se pudo agregar el producto al carrito. Intente nuevamente.');
+      }
+    });
+  }
+});
