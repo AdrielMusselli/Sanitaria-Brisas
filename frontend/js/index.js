@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
         suggestionsContainer.innerHTML = filtrados.map(prod => `
           <div class="suggestion-item p-2 border-bottom hover-bg-light" style="cursor: pointer;">
             <div class="d-flex align-items-center">
-              <img src="${prod.imagen || '../assets/pintura.jpeg'}" alt="${prod.nombre}" style="width: 40px; height: 40px; object-fit: cover;" class="me-2 rounded">
+              <img src="http://localhost/Sanitaria-Brisas/backend/${prod.imagenes || ''}" alt="${prod.nombre}" style="width: 40px; height: 40px; object-fit: cover;" class="me-2 rounded" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2214%22 fill=%22%23999%22%3ENo image%3C/text%3E%3C/svg%3E'">
               <div>
                 <div class="fw-bold">${prod.nombre}</div>
                 <div class="text-muted">$${prod.precio}</div>
@@ -116,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
           </div>
         `).join('');
+
         suggestionsContainer.style.display = 'block';
         
         // Agregar eventos click a las sugerencias
@@ -163,6 +164,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const data = await response.json();
+
+      console.log("[v0] Productos cargados del API:", data);
+      if (data.length > 0) {
+        console.log("[v0] Primer producto completo:", JSON.stringify(data[0], null, 2));
+      }
 
       // Store products in the global array
       producto.length = 0; // Clear the array
@@ -237,14 +243,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const btn = e.target.closest('.card-button');
     if (!btn) return;
 
-    // Evitar que el <a> padre navegue cuando el botón está dentro de un enlace
     e.preventDefault();
     e.stopPropagation();
 
     const id = btn.dataset.id;
     if (!id) return;
 
-    // Verificar sesión (función definida en nav.js)
     let user = null;
     try {
       if (typeof checkSession === 'function') {
@@ -255,45 +259,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!user) {
-  const loginModal = document.getElementById("loginModal");
+      const loginModal = document.getElementById("loginModal");
+      if (loginModal) {
+        loginModal.style.display = "block";
+      }
+      return;
+    }
 
-  if (loginModal) {
-    loginModal.style.display = "block";
-  } else {
-    console.warn("⚠️ No se encontró el modal de login en el DOM");
-  }
-
-  return;
-}
-
-    // Buscar el producto en el array global `producto`
     const prod = producto.find(p => String(p.id_producto) === String(id));
     if (!prod) {
       console.warn('Producto no encontrado para id:', id);
       return;
     }
 
-
-    // Agregar al carrito en localStorage
     try {
       const cart = getCart();
       
-      const productId = String(prod.id_producto); // Asegurar que el ID sea string
+      const productId = String(prod.id_producto);
       if (cart[productId]) {
         cart[productId].cantidad = Number(cart[productId].cantidad) + 1;
       } else {
+        const imagenPath = prod.imagenes && prod.imagenes.trim() 
+          ? `http://localhost/Sanitaria-Brisas/backend/${prod.imagenes}` 
+          : null;
+        
         cart[productId] = {
           id: productId,
           nombre: prod.nombre,
           precio: prod.precio,
           cantidad: 1,
-          imagen: prod.imagen || '../assets/pintura.jpeg'
+          imagen: imagenPath,
+          id_producto: prod.id_producto
         };
       }
       saveCart(cart);
       updateCartCount();
 
-      // Feedback visual sencillo
       btn.innerHTML = '<span class="text"><i class="fas fa-check-circle me-2"></i>Agregado</span>';
     } catch (err) {
       console.error('Error agregando al carrito:', err);
@@ -507,7 +508,7 @@ if (registroForm) {
     };
 
     try {
-      const res = await fetch('http://localhost/Sanitaria-Brisas/backend/Api/api.php', {
+      const res = await fetch('http://localhost/Sanitaria-brisas/backend/Api/api.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -543,7 +544,6 @@ if (registroForm) {
   });
 }
 
-
 // 🚪 LOGOUT
 
 document.addEventListener("click", async (e) => {
@@ -559,7 +559,8 @@ document.addEventListener("click", async (e) => {
     }
   }
 });
- // mostrar modal de login si no esta iniciado sesion al tocar el boton de carrito
+
+// mostrar modal de login si no esta iniciado sesion al tocar el boton de carrito
 document.addEventListener("DOMContentLoaded", () => {
   const cartLink = document.getElementById("cart-link");
 
@@ -585,7 +586,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
 
 // =========================
 // 🔁 Al cargar la página, verificar sesión activa

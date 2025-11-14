@@ -1,5 +1,3 @@
-
-
 document.addEventListener("DOMContentLoaded", async () => {
     // Verificar si hay sesión activa
     const user = await checkSession();
@@ -13,7 +11,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const container = document.getElementById('cart-items-container');
     renderCartItems();
 });
-
 
 function getCart() {
     try {
@@ -35,13 +32,10 @@ function saveCart(cart) {
 
 function renderCartItems() {
     const container = document.getElementById('cart-items-container');
-    console.debug('[carrito] renderCartItems called, container=', container);
     if (!container) return;
 
     const cart = getCart();
-    console.debug('[carrito] cart object =', cart);
     const items = Object.values(cart);
-    console.debug('[carrito] items length =', items.length);
 
     if (items.length === 0) {
         container.innerHTML = `<div class="alert alert-info">Tu carrito está vacío. <a href="../paginas/index.html">Ver productos</a></div>`;
@@ -55,10 +49,25 @@ function renderCartItems() {
         div.className = 'cart-item p-4 mb-3';
         div.dataset.id = item.id || item.id_producto;
 
+        const imageSrc = item.imagen && item.imagen.trim() && item.imagen.includes('http') ? item.imagen : '';
+        
+        const imageHtml = imageSrc 
+            ? `<img 
+                src="${imageSrc}" 
+                class="product-image img-fluid" 
+                alt="${escapeHtml(item.nombre)}" 
+                style="max-width: 100%; height: 120px; object-fit: cover; border-radius: 8px;"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            >
+            <div style="display:none; width:100%; height:120px; background:#f0f0f0; border-radius:8px; align-items:center; justify-content:center; border:1px solid #ddd;">
+                <span class="text-muted small">Imagen no disponible</span>
+            </div>`
+            : '<div style="width:100%; height:120px; background:#f0f0f0; border-radius:8px; display:flex; align-items:center; justify-content:center; border:1px solid #ddd;"><span class="text-muted small">Sin imagen</span></div>';
+
         div.innerHTML = `
             <div class="row align-items-center">
                 <div class="col-md-2">
-                    <img src="${item.imagen || '../assets/pintura.jpeg'}" class="product-image img-fluid">
+                    ${imageHtml}
                 </div>
                 <div class="col-md-4">
                     <h5 class="mb-1">${escapeHtml(item.nombre)}</h5>
@@ -89,7 +98,6 @@ function renderCartItems() {
         container.appendChild(div);
     });
 
-    // Attach listeners (delegation)
     container.querySelectorAll('[data-action="increase"]').forEach(btn => btn.addEventListener('click', onIncrease));
     container.querySelectorAll('[data-action="decrease"]').forEach(btn => btn.addEventListener('click', onDecrease));
     container.querySelectorAll('[data-action="remove"]').forEach(btn => btn.addEventListener('click', onRemove));

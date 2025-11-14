@@ -1,42 +1,42 @@
- function selectPayment(element) {
-            // Remove active class from all payment methods
-            document.querySelectorAll('.payment-method').forEach(method => {
-                method.classList.remove('active');
-            });
-            
-            // Add active class to selected method
-            element.classList.add('active');
-            
-            // Check the radio button
-            const radio = element.querySelector('input[type="radio"]');
-            if (radio) {
-                radio.checked = true;
-            }
-            
-            // Show/hide card form
-            const cardForm = document.getElementById('cardForm');
-            if (element.querySelector('.fa-credit-card')) {
-                cardForm.style.display = 'block';
-            } else {
-                cardForm.style.display = 'none';
-            }
-        }
+function selectPayment(element) {
+    // Remove active class from all payment methods
+    document.querySelectorAll('.payment-method').forEach(method => {
+        method.classList.remove('active');
+    });
+    
+    // Add active class to selected method
+    element.classList.add('active');
+    
+    // Check the radio button
+    const radio = element.querySelector('input[type="radio"]');
+    if (radio) {
+        radio.checked = true;
+    }
+    
+    // Show/hide card form
+    const cardForm = document.getElementById('cardForm');
+    if (element.querySelector('.fa-credit-card')) {
+        cardForm.style.display = 'block';
+    } else {
+        cardForm.style.display = 'none';
+    }
+}
 
-        // Format card number input
-        document.querySelector('input[placeholder="1234 5678 9012 3456"]')?.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s/g, '');
-            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
-            e.target.value = formattedValue;
-        });
+// Format card number input
+document.querySelector('input[placeholder="1234 5678 9012 3456"]')?.addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\s/g, '');
+    let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+    e.target.value = formattedValue;
+});
 
-        // Format expiration date
-        document.querySelector('input[placeholder="MM/AA"]')?.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.slice(0, 2) + '/' + value.slice(2, 4);
-            }
-            e.target.value = value;
-        });
+// Format expiration date
+document.querySelector('input[placeholder="MM/AA"]')?.addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+    }
+    e.target.value = value;
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   renderOrderSummary();
@@ -80,9 +80,15 @@ function renderOrderSummary() {
     const subtotalItem = cantidad * precio;
     subtotal += subtotalItem;
 
+    const imageSrc = prod.imagen && prod.imagen.trim() ? prod.imagen : '';
+    const imageHtml = imageSrc ? `
+      <img src="${imageSrc}" alt="${prod.nombre}" class="product-mini-img" onerror="this.style.display='none';">
+      <div style="display:none; width:80px; height:60px; background:#f0f0f0; border-radius:4px;"></div>
+    ` : '<div style="width:80px; height:60px; background:#f0f0f0; border-radius:4px;"></div>';
+
     const itemHTML = `
       <div class="product-mini">
-        <img src="${prod.imagen || '../assets/pintura.jpeg'}" alt="${prod.nombre}" class="product-mini-img">
+        ${imageHtml}
         <div class="product-mini-info">
           <div class="product-mini-name">${prod.nombre}</div>
           <div class="product-mini-qty">Cantidad: ${cantidad}</div>
