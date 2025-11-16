@@ -77,38 +77,8 @@
         <!-- Wishlist Products Grid -->
         <div class="row g-4">
             <!-- Product 1 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="wishlist-card">
-                    <div class="position-relative">
-                        <span class="wishlist-badge">-25%</span>
-                        <span class="stock-badge">En Stock</span>
-                        <img src="../assets/pintura.jpeg" alt="Smartphone" class="wishlist-card-img">
-                    </div>
-                    <div class="wishlist-card-body">
-                        <h5 class="product-title">Smartphone Galaxy Pro Max</h5>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span class="rating-count">(4.5) 234 reseñas</span>
-                        </div>
-                        <div class="mb-3">
-                            <span class="product-price">$599.99</span>
-                            <span class="product-old-price">$799.99</span>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart(1)">
-                            <i class="fas fa-shopping-cart me-2"></i>Agregar al Carrito
-                        </button>
-                        <button class="btn-remove" onclick="removeFromWishlist(1)">
-                            <i class="fas fa-trash me-2"></i>Eliminar
-                        </button>
-                    </div>
-                </div>
-            </div>
+             <div id="lista-favoritos" class="row"></div>
         </div>
-
 </main>
     <!-- Footer -->
       <footer class="container-fluid py-4 bg-dark" style="color: rgb(187, 186, 186);">
@@ -133,34 +103,7 @@
 </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function addToCart(productId) {
-            alert(`Producto ${productId} agregado al carrito`);
-            // Aquí iría la lógica para agregar al carrito
-        }
-
-        function removeFromWishlist(productId) {
-            if (confirm('¿Estás seguro de que quieres eliminar este producto de tu lista de deseos?')) {
-                alert(`Producto ${productId} eliminado de la lista de deseos`);
-                // Aquí iría la lógica para eliminar de la wishlist
-            }
-        }
-
-        function addAllToCart() {
-            if (confirm('¿Deseas agregar todos los productos disponibles al carrito?')) {
-                alert('Todos los productos disponibles han sido agregados al carrito');
-                // Aquí iría la lógica para agregar todos los productos
-            }
-        }
-
-        // Filter functionality
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                // Aquí iría la lógica de filtrado
-            });
-        });
-    </script>
+    <script src="../js/listadeseos.js"></script>
+    <script src="../js/nav.js"></script>
 </body>
 </html>

@@ -54,4 +54,13 @@ register_shutdown_function(function() {
         echo json_encode(["success" => false, "message" => "Error fatal en el servidor", "error" => $error]);
     }
 });
+
+function agregarReseña($id_producto, $id_usuario, $puntuacion, $comentario, $fecha) {
+    global $productoModel;
+    if ($productoModel->agregarReseña($id_producto, $id_usuario, $puntuacion, $comentario, $fecha)) {
+        echo json_encode(["success" => true, "message" => "Reseña agregada exitosamente"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Error al agregar la reseña"]);
+    }
+}
 ?>

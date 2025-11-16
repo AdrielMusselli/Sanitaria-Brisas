@@ -1,19 +1,59 @@
 <?php
-require "../Models/Pedido.php"; // Importar el modelo
+require "../Models/Pedido.php"; // Importa el modelo
 
-$pedidoModel = new Pedido ($pdo);// Instancia del modelo
+// Instancia del modelo principal
+$pedidoModel = new Pedido($pdo);
 
+/**
+ * Obtener todos los pedidos
+ */
 function obtenerPedido() {
     global $pedidoModel;
     echo json_encode($pedidoModel->obtenerTodos());
 }
 
-function agregarPedido($id_pedido, $id_usuario, $fecha, $estado, $precio_total, $direccion_envio) {
+/**
+ * Agregar un nuevo pedido con sus productos
+ */
+function agregarPedido() {
     global $pedidoModel;
-    if ($pedidoModel->agregar($id_pedido, $id_usuario, $fecha, $estado, $precio_total, $direccion_envio)) {
-        echo json_encode(["message" => "producto agregado"]);
-    } else {
-        echo json_encode(["error" => "Error al agregar el producto"]);
+
+    $id_usuario    = $_POST['id_usuario'] ?? null;
+    $estado        = $_POST['estado'] ?? "Pendiente";
+    $direccion     = $_POST['direccion_envio'] ?? "";
+    $precio_total  = $_POST['precio_total'] ?? 0;
+    $fecha         = $_POST['fecha'] ?? date('Y-m-d H:i:s');
+    $productos     = json_decode($_POST['productos'] ?? '[]', true);
+
+    if (!$id_usuario || empty($productos)) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Parámetros faltantes"
+        ]);
+        exit;
     }
+
+    $resultado = $pedidoModel->agregar($id_usuario, $fecha, $estado, $precio_total, $direccion, $productos);
+
+    echo json_encode($resultado);
 }
-?>
+
+
+function obtenerDetallesPedido($id_pedido) {
+    global $pedidoModel;
+
+    if (!$id_pedido) {
+        echo json_encode([
+            "success" => false,
+            "message" => "Falta id_pedido"
+        ]);
+        return;
+    }
+
+    $detalles = $pedidoModel->obtenerDetallesPedido($id_pedido);
+
+    echo json_encode([
+        "success" => true,
+        "detalles" => $detalles ?: []
+    ]);
+}

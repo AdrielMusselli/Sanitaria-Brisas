@@ -145,14 +145,25 @@ function onRemove(e) {
 function updateTotal() {
     const cart = getCart();
     const items = Object.values(cart);
+
     let subtotal = 0;
     items.forEach(i => subtotal += Number(i.precio) * Number(i.cantidad || 0));
-    // Actualizar campos del resumen
-    const subtotalElem = document.querySelector('.summary-card .price-text');
+
+    const envio = 400; // fijo
+    const impuestos = subtotal * 0.21; // 21%
+
+    const subtotalElem = document.querySelector('.summary-card .price-text:nth-of-type(1)');
+    const envioElem = document.querySelector('.summary-card .price-text:nth-of-type(2)');
+    const impuestosElem = document.querySelector('.summary-card .price-text:nth-of-type(3)');
     const totalElem = document.querySelector('.summary-card .total-price');
+
     if (subtotalElem) subtotalElem.textContent = `$${subtotal.toFixed(2)}`;
-    if (totalElem) totalElem.textContent = `$${(subtotal + 15 + 72.8).toFixed(2)}`; // valores de ejemplo
+    if (envioElem) envioElem.textContent = `$${envio.toFixed(2)}`;
+    if (impuestosElem) impuestosElem.textContent = `$${impuestos.toFixed(2)}`;
+    if (totalElem) totalElem.textContent = `$${(subtotal + envio + impuestos).toFixed(2)}`;
 }
+
+
 
 // Simple escape para evitar inyección en nombres
 function escapeHtml(text) {
@@ -161,3 +172,24 @@ function escapeHtml(text) {
         return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s];
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("btn-proceder-pago");
+    if (!btn) return;
+
+    btn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const cart = getCart();
+        const items = Object.values(cart);
+
+        if (items.length === 0) {
+            alert("Debes tener al menos un producto en el carrito para proceder al pago.");
+            return;
+        }
+
+        window.location.href = "checkout.html";
+    });
+});
+
+

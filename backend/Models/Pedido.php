@@ -1,44 +1,106 @@
 <?php
-// Se importa el archivo que contiene la configuración de la base de datos, que establece la conexión
-require "../Config/pdo.php"; // Importar la conexión a la base de datos
+require "../Config/pdo.php"; // Conexión a la BD
 
-// Definición de la clase Libro que interactuará con la tabla 'libros' en la base de datos
 class Pedido {
-    private $pdo;  // Declaración de una propiedad privada para almacenar la conexión PDO
 
-    // El constructor recibe el objeto $pdo (conexión a la base de datos) y lo asigna a la propiedad $this->pdo
+    private $pdo;
+
     public function __construct($pdo) {
-        $this->pdo = $pdo;  // Asigna la conexión PDO a la propiedad de la clase
+        $this->pdo = $pdo;
     }
 
-    // Método para obtener todos los productos de la base de datos
+    /**
+     * Obtener todos los pedidos
+     */
     public function obtenerTodos() {
-        // Prepara la consulta SQL para seleccionar todos los registros de la tabla 'productos'
         $stmt = $this->pdo->prepare("SELECT * FROM pedido");
-
-        // Ejecuta la consulta
         $stmt->execute();
-        
-        // Devuelve todos los resultados como un array asociativo
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Agregar un pedido con sus productos
+     */
+    public function agregar($id_usuario, $fecha, $estado, $precio_total, $direccion_envio, $productos) {
+    try {
+        $this->pdo->beginTransaction();
 
-public function agregar($id_pedido, $id_usuario, $fecha, $estado, $precio_total, $direccion_envio) {
-        $stmt = $this->pdo->prepare("INSERT INTO pedido (id_pedido, id_usuario, fecha, estado, precio_total, direccion_envio)
-        VALUES (:id_pedido, :id_usuario, :fecha, :estado, :precio_total, :direccion_envio)");
+        // Insertar pedido
+        $stmt = $this->pdo->prepare("
+            INSERT INTO pedido (id_usuario, fecha, estado, precio_total, direccion_envio)
+            VALUES (:id_usuario, :fecha, :estado, :precio_total, :direccion_envio)
+        ");
+        $stmt->execute([
+            ":id_usuario" => $id_usuario,
+            ":fecha" => $fecha,
+            ":estado" => $estado,
+            ":precio_total" => $precio_total,
+            ":direccion_envio" => $direccion_envio
+        ]);
 
-    return $stmt->execute([
-        "id_pedido" => $id_pedido,
-        ":id_usuario" => $id_usuario,
-        ":fecha" => $fecha,
-        ":estado" => $estado,
-        ":precio_total" => $precio_total,
-        ":direccion_envio" => $direccion_envio,
-    ]);
+        $id_pedido_nuevo = $this->pdo->lastInsertId();
+
+        // Preparar inserción detalle y actualización de stock
+        $stmtDetalle = $this->pdo->prepare("
+            INSERT INTO detallepedido (id_pedido, id_producto, cantidad, precio_unitario)
+            VALUES (:id_pedido, :id_producto, :cantidad, :precio_unitario)
+        ");
+
+        $stmtStock = $this->pdo->prepare("
+            UPDATE producto SET stock = stock - :cantidad
+            WHERE id_producto = :id_producto AND stock >= :cantidad
+        ");
+
+        foreach ($productos as $p) {
+            // Insertar detalle
+            $stmtDetalle->execute([
+                ":id_pedido" => $id_pedido_nuevo,
+                ":id_producto" => $p["id_producto"],
+                ":cantidad" => $p["cantidad"],
+                ":precio_unitario" => $p["precio_unitario"]
+            ]);
+
+            // Actualizar stock
+            $stmtStock->execute([
+                ":id_producto" => $p["id_producto"],
+                ":cantidad" => $p["cantidad"]
+            ]);
+
+            if ($stmtStock->rowCount() === 0) {
+                throw new Exception("No hay stock suficiente para el producto ID " . $p["id_producto"]);
+            }
+        }
+
+        $this->pdo->commit();
+
+        return [
+            "success" => true,
+            "id_pedido" => $id_pedido_nuevo
+        ];
+
+    } catch (Exception $e) {
+        $this->pdo->rollBack();
+        return [
+            "success" => false,
+            "message" => "Error al guardar el pedido",
+            "error" => $e->getMessage()
+        ];
+    }
 }
 
+    /**
+     * Obtener detalles de un pedido por su ID
+     */
+    public function obtenerDetallesPedido($id_pedido) {
+        $sql = "SELECT id_producto, cantidad, precio_unitario
+                FROM detallepedido
+                WHERE id_pedido = :id_pedido";
 
-    
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(["id_pedido" => $id_pedido]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
+
 ?>

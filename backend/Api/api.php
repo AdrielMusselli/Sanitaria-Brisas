@@ -44,6 +44,8 @@ require "../Controllers/productos.php";
 require "../Controllers/Pedidos.php";
 require "../Controllers/Usuarios.php";
 require "../Controllers/logins.php";
+require_once "../Models/Pedido.php";
+
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -82,6 +84,17 @@ if ($requestMethod == "GET") {
         case "pedido":
             obtenerPedido();
             break;
+
+        case "detallepedido":
+    $id = $_GET['id_pedido'] ?? null;
+
+    if (!$id) {
+        echo json_encode(["success" => false, "message" => "Falta id_pedido"]);
+        exit;
+    }
+
+    obtenerDetallesPedido($id);
+    break;
 
         case "usuario":
             obtenerUsuario();
@@ -133,15 +146,11 @@ if ($requestMethod == "POST") {
             agregarProducto($nombre, $categoria, $precio, $stock, $descripcion, $imagenes);
             break;
 
-        case "pedido":
-            agregarPedido(
-                $input['id_pedido'] ?? null,
-                $input['id_usuario'] ?? null,
-                $input['fecha'] ?? null,
-                $input['estado'] ?? null,
-                $input['precio_total'] ?? null,
-                $input['direccion_envio'] ?? null
-            );
+        case "agregarpedido":
+        agregarPedido();
+        break;
+
+
             break;
 
         case "login":
@@ -155,6 +164,62 @@ if ($requestMethod == "POST") {
         case "logout":
             cerrarSesion();
             break;
+
+      case "resena":
+    try {
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        $id_usuario  = isset($input['id_usuario']) ? intval($input['id_usuario']) : null;
+        $id_producto = isset($input['id_producto']) ? intval($input['id_producto']) : null;
+        $puntuacion  = isset($input['puntuacion']) ? intval($input['puntuacion']) : null;
+        $comentario  = isset($input['comentario']) ? trim($input['comentario']) : '';
+
+        if (!$id_usuario || !$id_producto || !$puntuacion || $puntuacion < 1 || $puntuacion > 10) {
+            echo json_encode([
+                "success" => false,
+                "message" => "Parámetros inválidos o faltantes",
+                "debug" => $input
+            ]);
+            exit;
+        }
+
+        $fecha = date('Y-m-d H:i:s');
+
+        if (agregarReseña($id_producto, $id_usuario, $puntuacion, $comentario, $fecha)) {
+            echo json_encode(["success" => true, "message" => "Reseña agregada exitosamente"]);
+        } else {
+            echo json_encode(["success" => false, "message" => "Error al agregar la reseña"]);
+        }
+    } catch (Exception $e) {
+        // Evitar caracteres que rompan JSON
+        $msg = preg_replace('/[^(\x20-\x7F)]*/','', $e->getMessage());
+
+        echo json_encode([
+            "success" => false,
+            "message" => "Error interno del servidor",
+            "error" => $msg
+        ]);
+    }
+    break;
+
+        
+        case 'pedido_estado':
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+        $id = $_POST["id_pedido"];
+        $estado = $_POST["estado"];
+
+        $stmt = $pdo->prepare("UPDATE pedido SET estado = :estado WHERE id_pedido = :id");
+        $stmt->execute([
+            ":estado" => $estado,
+            ":id" => $id
+        ]);
+
+        echo json_encode(["success" => true, "message" => "Estado actualizado"]);
+        exit;
+    }
+    break;
+
 
         default:
             echo json_encode(["success" => false, "message" => "Sección inválida"]);

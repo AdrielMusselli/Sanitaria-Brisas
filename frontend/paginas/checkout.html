@@ -37,40 +37,31 @@
                         </div>
                     </div>
 
-                    <form>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Nombre</label>
-                                <input type="text" class="form-control" placeholder="Nombre" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Apellido</label>
-                                <input type="text" class="form-control" placeholder="Apellido" required>
-                            </div>
-                        </div>
+                  <form>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" name="nombre" placeholder="Nombre" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Apellido</label>
+            <input type="text" class="form-control" name="apellido" placeholder="Apellido" required>
+        </div>
+    </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" placeholder="mail@gmail.com" required>
-                        </div>
+    <div class="mb-3">
+        <label class="form-label">Dirección</label>
+        <input type="text" class="form-control" name="direccion" placeholder="Dirección" required>
+    </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Teléfono</label>
-                            <input type="tel" class="form-control" placeholder="+598 600 000 000" required>
-                        </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="saveAddress" id="saveAddress">
+        <label class="form-check-label" for="saveAddress">
+            Guardar esta dirección para futuras compras
+        </label>
+    </div>
+</form>
 
-                        <div class="mb-3">
-                            <label class="form-label">Dirección</label>
-                            <input type="text" class="form-control" placeholder="Direccion" required>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="saveAddress">
-                            <label class="form-check-label" for="saveAddress">
-                                Guardar esta dirección para futuras compras
-                            </label>
-                        </div>
-                    </form>
                 </div>
 
                 <!-- Metodo de pago -->
