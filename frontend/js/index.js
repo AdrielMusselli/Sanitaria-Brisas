@@ -37,7 +37,7 @@ function mostrarProductos(productos) {
       const card = document.createElement("div");
       card.classList.add("card", "h-100", "position-relative", "overflow-hidden");
 
-      const imagen = producto.imagenes || 'https://via.placeholder.com/300x300?text=Sin+Imagen';
+      const imagen = producto.imagenes;
 
       card.innerHTML = `
         <button class="btn-favorito" data-id="${producto.id_producto}" title="Agregar a favoritos">
@@ -47,7 +47,7 @@ function mostrarProductos(productos) {
         <div class="card-body">
           <a href="../paginas/producto.html?id=${producto.id_producto}" class="text-decoration-none text-dark">
             <div class="card-content">
-              <img src="http://localhost/Sanitaria-Brisas/backend/${imagen}" alt="${producto.nombre}" class="img-fluid mb-3 rounded" onerror="this.src='https://via.placeholder.com/300x300?text=Sin+Imagen'">
+              <img src="http://localhost/Sanitaria-Brisas/backend/${imagen}" alt="${producto.nombre}" class="img-fluid mb-3 rounded"">
               <h3 class="card-title">${producto.nombre}</h3>
               <h5 class="card-price">$${producto.precio}</h5>
               <button class="card-button btn btn-primary mt-2" data-id="${producto.id_producto}">
@@ -168,7 +168,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Normalizar la categoría (primera letra mayúscula, resto minúsculas)
         const categoria = link.getAttribute('data-category');
         const categoriaFormateada = categoria.charAt(0).toUpperCase() + categoria.slice(1).toLowerCase();
-        console.log('Click en categoría:', categoriaFormateada);
         
         // Mostrar spinner de carga
         mostrarCargando();
@@ -553,7 +552,7 @@ function mostrarProductos(productos) {
       const card = document.createElement("div");
       card.classList.add("card", "h-100", "position-relative", "overflow-hidden");
 
-      const imagen = producto.imagenes || 'https://via.placeholder.com/300x300?text=Sin+Imagen';
+      const imagen = producto.imagenes;
       
       const favoritos = getFavoritos();
       const esFavorito = favoritos[String(producto.id_producto)];
@@ -568,7 +567,7 @@ function mostrarProductos(productos) {
         <div class="card-body">
           <a href="../paginas/producto.html?id=${producto.id_producto}" class="text-decoration-none text-dark">
             <div class="card-content">
-              <img src="http://localhost/Sanitaria-Brisas/backend/${imagen}" alt="${producto.nombre}" class="img-fluid mb-3 rounded" onerror="this.src='https://via.placeholder.com/300x300?text=Sin+Imagen'">
+              <img src="http://localhost/Sanitaria-Brisas/backend/${imagen}" alt="${producto.nombre}" class="img-fluid mb-3 rounded"">
               <h3 class="card-title">${producto.nombre}</h3>
               <h5 class="card-price">$${producto.precio}</h5>
               <button class="card-button btn btn-primary mt-2" data-id="${producto.id_producto}">
@@ -621,10 +620,11 @@ document.addEventListener('click', async (e) => {
         id: productId,
         nombre: prod.nombre,
         precio: prod.precio,
+        categoria: prod.categoria,
+        stock: prod.stock,
         imagen: imagenPath,
         id_producto: prod.id_producto
       };
-      console.log('Producto agregado a favoritos:', prod.nombre);
     }
     
     saveFavoritos(favoritos);

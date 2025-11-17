@@ -152,15 +152,15 @@ function updateTotal() {
     const envio = 400; // fijo
     const impuestos = subtotal * 0.21; // 21%
 
-    const subtotalElem = document.querySelector('.summary-card .price-text:nth-of-type(1)');
-    const envioElem = document.querySelector('.summary-card .price-text:nth-of-type(2)');
-    const impuestosElem = document.querySelector('.summary-card .price-text:nth-of-type(3)');
-    const totalElem = document.querySelector('.summary-card .total-price');
+    const subtotalElem = document.getElementById("subtotal-price");
+    const envioElem = document.getElementById("envio-price");
+    const impuestosElem = document.getElementById("impuestos-price");
+    const totalElem = document.getElementById("total-price");
 
-    if (subtotalElem) subtotalElem.textContent = `$${subtotal.toFixed(2)}`;
-    if (envioElem) envioElem.textContent = `$${envio.toFixed(2)}`;
-    if (impuestosElem) impuestosElem.textContent = `$${impuestos.toFixed(2)}`;
-    if (totalElem) totalElem.textContent = `$${(subtotal + envio + impuestos).toFixed(2)}`;
+    subtotalElem.textContent = `$${subtotal.toFixed(2)}`;
+    envioElem.textContent = `$${envio.toFixed(2)}`;
+    impuestosElem.textContent = `$${impuestos.toFixed(2)}`;
+    totalElem.textContent = `$${(subtotal + envio + impuestos).toFixed(2)}`;
 }
 
 
