@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-11-2025 a las 16:50:55
+-- Tiempo de generación: 16-11-2025 a las 04:21:19
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,34 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `sanitaria-brisas`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detallepedido`
+--
+
+CREATE TABLE `detallepedido` (
+  `id_detalle_pedido` int(11) NOT NULL,
+  `id_pedido` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `precio_unitario` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detallepedido`
+--
+
+INSERT INTO `detallepedido` (`id_detalle_pedido`, `id_pedido`, `id_producto`, `cantidad`, `precio_unitario`) VALUES
+(5, 2, 41, 3, 30.00),
+(6, 2, 43, 2, 20.00),
+(7, 13, 43, 1, 2000.00),
+(8, 13, 44, 1, 3000.00),
+(9, 14, 43, 1, 2000.00),
+(10, 14, 44, 1, 3000.00),
+(11, 14, 45, 1, 4500.00),
+(12, 15, 44, 5, 3000.00);
 
 -- --------------------------------------------------------
 
@@ -41,7 +69,12 @@ CREATE TABLE `pedido` (
 --
 
 INSERT INTO `pedido` (`id_pedido`, `id_usuario`, `fecha`, `estado`, `direccion_envio`, `precio_total`) VALUES
-(2, 2, '2025-08-26', 'Enviado', 'Av. Italia 456, Montevideo', 4800.00);
+(2, 2, '2025-08-26', 'entregado', 'Av. Italia 456, Montevideo', 4800.00),
+(4, 1, '2025-11-15', 'en proceso', 'sadsfd scdvfg - adsfdgf', 8115.00),
+(12, 1, '2025-11-15', 'entregado', 'emiliano marquez - dir', 8115.00),
+(13, 1, '2025-11-15', 'entregado', 'emiliano marquez - dir', 5415.00),
+(14, 1, '2025-11-16', 'Pendiente', 'emiliano marquez - tula suarez', 10275.00),
+(15, 1, '2025-11-16', 'Pendiente', 'emiliano marquez - tula suarez', 16215.00);
 
 -- --------------------------------------------------------
 
@@ -65,9 +98,9 @@ CREATE TABLE `producto` (
 
 INSERT INTO `producto` (`id_producto`, `nombre`, `categoria`, `precio`, `stock`, `descripcion`, `imagenes`) VALUES
 (41, 'tenaza', 'Herramientas', 1500.00, 100, 'La tenaza es una herramienta manual resistente y versátil, fabricada en acero de alta calidad, ideal para trabajos de construcción, carpintería y uso general en el hogar. Diseñada para ofrecer un agarre firme y preciso, permite sujetar, torcer y cortar alambres con facilidad. Su mango ergonómico proporciona comodidad y control durante el uso prolongado, convirtiéndola en una herramienta indispensable para profesionales y aficionados.', 'assets/69166ac80b17c_descarga.jfif'),
-(43, 'serrucho', 'Herramientas', 2000.00, 200, 'El serrucho es una herramienta manual indispensable para realizar cortes rápidos y precisos en madera. Su hoja de acero al carbono, afilada y resistente, ofrece un rendimiento óptimo incluso en trabajos exigentes. El mango ergonómico proporciona un agarre cómodo y seguro, facilitando el control durante el uso. Perfecto para carpintería, bricolaje y tareas de construcción, el serrucho combina durabilidad, eficiencia y facilidad de manejo.', 'assets/69166b3b60954_serrucho.jfif'),
-(44, 'taladro', 'Herramientas', 3000.00, 100, 'El taladro es una herramienta eléctrica indispensable para perforar madera, metal, plástico y mampostería con precisión y rapidez. Equipado con un motor potente y múltiples velocidades, permite adaptarse a distintos tipos de trabajo. Su diseño ergonómico y liviano brinda mayor comodidad y control, reduciendo la fatiga durante el uso prolongado. Ideal para profesionales y usuarios domésticos, el taladro ofrece versatilidad, potencia y durabilidad en todo tipo de proyectos.', 'assets/69166b8703a24_taladro.jfif'),
-(45, 'sierra', 'Herramientas', 4500.00, 50, 'La sierra es una herramienta esencial para cortes precisos en madera, plástico y otros materiales. Fabricada con una hoja de acero templado de alta resistencia, garantiza un corte limpio y uniforme. Su diseño ergonómico permite un manejo cómodo y seguro, reduciendo la fatiga en trabajos prolongados. Ideal para carpinteros, técnicos y usuarios domésticos que buscan calidad, durabilidad y rendimiento en cada proyecto.', 'assets/69166bca8e618_sierra.jfif'),
+(43, 'serrucho', 'Herramientas', 2000.00, 199, 'El serrucho es una herramienta manual indispensable para realizar cortes rápidos y precisos en madera. Su hoja de acero al carbono, afilada y resistente, ofrece un rendimiento óptimo incluso en trabajos exigentes. El mango ergonómico proporciona un agarre cómodo y seguro, facilitando el control durante el uso. Perfecto para carpintería, bricolaje y tareas de construcción, el serrucho combina durabilidad, eficiencia y facilidad de manejo.', 'assets/69166b3b60954_serrucho.jfif'),
+(44, 'taladro', 'Herramientas', 3000.00, 94, 'El taladro es una herramienta eléctrica indispensable para perforar madera, metal, plástico y mampostería con precisión y rapidez. Equipado con un motor potente y múltiples velocidades, permite adaptarse a distintos tipos de trabajo. Su diseño ergonómico y liviano brinda mayor comodidad y control, reduciendo la fatiga durante el uso prolongado. Ideal para profesionales y usuarios domésticos, el taladro ofrece versatilidad, potencia y durabilidad en todo tipo de proyectos.', 'assets/69166b8703a24_taladro.jfif'),
+(45, 'sierra', 'Herramientas', 4500.00, 49, 'La sierra es una herramienta esencial para cortes precisos en madera, plástico y otros materiales. Fabricada con una hoja de acero templado de alta resistencia, garantiza un corte limpio y uniforme. Su diseño ergonómico permite un manejo cómodo y seguro, reduciendo la fatiga en trabajos prolongados. Ideal para carpinteros, técnicos y usuarios domésticos que buscan calidad, durabilidad y rendimiento en cada proyecto.', 'assets/69166bca8e618_sierra.jfif'),
 (46, 'IsoPanel', 'Techos', 2000.00, 400, 'El isopanel para techos es un panel termoaislante compuesto por dos láminas de acero galvanizado y un núcleo de espuma rígida de poliuretano o poliestireno, diseñado para brindar excelente aislamiento térmico y acústico. Su estructura liviana, resistente y de alta durabilidad lo convierte en una solución ideal para viviendas, galpones, comercios e instalaciones industriales. Además, ofrece una instalación rápida y limpia, con un acabado estético moderno y gran resistencia a la humedad y la corrosión. Perfecto para quienes buscan eficiencia energética, confort y larga vida útil en sus construcciones.', 'assets/69166e5ce4de7_isopanel.jfif'),
 (47, 'Chapa', 'Techos', 1500.00, 150, 'La chapa para techo es una solución resistente y duradera para la cobertura de viviendas, galpones, comercios y estructuras rurales. Fabricada en acero galvanizado o prepintado, ofrece alta protección contra la corrosión, gran capacidad de drenaje y excelente comportamiento frente a las inclemencias del tiempo. Su diseño acanalado o trapezoidal brinda rigidez estructural y facilita la instalación, asegurando un techado liviano, económico y de larga vida útil. Ideal para proyectos que requieren fortaleza, practicidad y bajo mantenimiento.', 'assets/69166e9a9fff5_chapa.jfif'),
 (48, 'Pintura', 'Pinturas', 1500.00, 250, 'La pintura es un recubrimiento de alta calidad diseñado para proteger y embellecer superficies interiores y exteriores. Formulada con componentes duraderos, ofrece excelente adherencia, cobertura uniforme y resistencia al desgaste. Disponible en una amplia variedad de colores y acabados, permite renovar paredes, metales, maderas y otras superficies con resultados profesionales. Su secado rápido y fácil aplicación la convierten en una opción ideal tanto para usuarios domésticos como para trabajos profesionales.', 'assets/69166ee615b77_pintura.jfif'),
@@ -120,6 +153,14 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `telefono`, `contraseña
 --
 
 --
+-- Indices de la tabla `detallepedido`
+--
+ALTER TABLE `detallepedido`
+  ADD PRIMARY KEY (`id_detalle_pedido`),
+  ADD KEY `id_pedido` (`id_pedido`),
+  ADD KEY `id_producto` (`id_producto`);
+
+--
 -- Indices de la tabla `pedido`
 --
 ALTER TABLE `pedido`
@@ -152,16 +193,22 @@ ALTER TABLE `usuario`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `detallepedido`
+--
+ALTER TABLE `detallepedido`
+  MODIFY `id_detalle_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `reseña`
@@ -178,6 +225,13 @@ ALTER TABLE `usuario`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `detallepedido`
+--
+ALTER TABLE `detallepedido`
+  ADD CONSTRAINT `detallepedido_ibfk_1` FOREIGN KEY (`id_pedido`) REFERENCES `pedido` (`id_pedido`) ON DELETE CASCADE,
+  ADD CONSTRAINT `detallepedido_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `pedido`

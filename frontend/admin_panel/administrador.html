@@ -157,12 +157,18 @@
 <div class="modal fade" id="pedidoModal" tabindex="-1" aria-labelledby="pedidoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
+
+            <!-- Header -->
             <div class="modal-header">
                 <h5 class="modal-title" id="pedidoModalLabel">Detalles del pedido</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
+            <!-- Body -->
             <div class="modal-body">
-                <h6>Información del pedido</h6>
+
+                <!-- INFO PEDIDO -->
+                <h6 class="mb-2">Información del pedido</h6>
                 <p><strong>ID:</strong> <span id="modalPedidoId"></span></p>
                 <p><strong>Fecha:</strong> <span id="modalPedidoFecha"></span></p>
                 <p><strong>Estado:</strong> <span id="modalPedidoEstado"></span></p>
@@ -170,14 +176,60 @@
                 <p><strong>Dirección de envío:</strong> <span id="modalPedidoDireccion"></span></p>
 
                 <hr>
-                <h6>Información del usuario</h6>
+
+                <!-- INFO USUARIO -->
+                <h6 class="mb-2">Información del usuario</h6>
                 <p><strong>Nombre:</strong> <span id="modalUsuarioNombre"></span></p>
                 <p><strong>Email:</strong> <span id="modalUsuarioEmail"></span></p>
                 <p><strong>Teléfono:</strong> <span id="modalUsuarioTelefono"></span></p>
+
+                <hr>
+
+                <!-- PRODUCTOS DEL PEDIDO -->
+                <h5 class="mt-3">Productos del pedido</h5>
+                <div id="modalProductos" class="mt-2"></div>
+
             </div>
+
+            <!-- Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
+
         </div>
     </div>
 </div>
+
+<!-- Modal Cambiar Estado -->
+<div class="modal fade" id="modalEstado" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title">Cambiar estado del pedido</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="estadoPedidoId">
+
+        <label for="nuevoEstado" class="form-label">Nuevo estado:</label>
+        <select id="nuevoEstado" class="form-select">
+          <option value="en proceso">En proceso</option>
+          <option value="enviado">Enviado</option>
+          <option value="entregado">Entregado</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarEstado()">Guardar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+

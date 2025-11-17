@@ -55,11 +55,15 @@ function renderizarPedidos(data) {
         <td>${pedido.estado || ''}</td>
         <td>${pedido.direccion_envio || ''}</td>
         <td>$${pedido.precio_total ? Number.parseFloat(pedido.precio_total).toFixed(2) : '0.00'}</td>
-        <td>
-          <button class="btn btn-sm btn-info" onclick="verPedido(${pedido.id_pedido})">
-            <i class="fas fa-eye"></i>
-          </button>
-        </td>
+       <td>
+  <button class="btn btn-sm btn-info me-1" onclick="verPedido(${pedido.id_pedido})">
+    <i class="fas fa-eye"></i>
+  </button>
+
+  <button class="btn btn-sm btn-warning" onclick="abrirModalEstado(${pedido.id_pedido}, '${pedido.estado}')">
+    <i class="fas fa-edit"></i>
+  </button>
+</td>
       </tr>
     `).join('');
 }
@@ -92,17 +96,69 @@ function verPedido(id) {
       document.getElementById('modalUsuarioNombre').textContent = user.nombre || '';
       document.getElementById('modalUsuarioEmail').textContent = user.email || '';
       document.getElementById('modalUsuarioTelefono').textContent = user.telefono || '';
-
-      // Mostrar modal
-      const modalEl = document.getElementById('pedidoModal');
-      const modal = new bootstrap.Modal(modalEl);
-      modal.show();
     })
     .catch(err => {
       console.error('Error al obtener usuario:', err);
       alert('No se pudo obtener información del usuario');
     });
+
+  // Obtener los productos del pedido
+fetch(`http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=detallepedido&id_pedido=${encodeURIComponent(id)}`)
+  .then(resp => {
+    if (!resp.ok) throw new Error('Error HTTP ' + resp.status);
+    return resp.json();
+  })
+  .then(data => {
+
+    if (!data.success) {
+      throw new Error("La API devolvió success = false");
+    }
+
+    const detalles = data.detalles; // ✅ ahora sí el array
+
+    const productosContainer = document.getElementById('modalProductos');
+    productosContainer.innerHTML = '';
+
+    detalles.forEach(detalle => {
+      const { id_producto, cantidad, precio_unitario } = detalle;
+
+      // Obtener datos del producto
+      fetch(`http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=producto&id=${encodeURIComponent(id_producto)}`)
+        .then(resp => resp.json())
+        .then(producto => {
+
+          // Si tu API devuelve un array, tomamos el primero
+          const prod = Array.isArray(producto) ? producto[0] : producto;
+
+          const nombre = prod.nombre || "Producto desconocido";
+
+          const productoHtml = `
+            <div class="producto">
+              <strong>${nombre}</strong><br>
+              Precio Unitario: $${parseFloat(precio_unitario).toFixed(2)}<br>
+              Cantidad: ${cantidad}<br>
+              Total: $${(precio_unitario * cantidad).toFixed(2)}
+            </div>
+            <hr>
+          `;
+          productosContainer.innerHTML += productoHtml;
+        })
+        .catch(err => {
+          console.error('Error al obtener producto:', err);
+        });
+    });
+  })
+  .catch(err => {
+    console.error('Error al obtener detalles del pedido:', err);
+    alert('No se pudieron obtener los detalles del pedido');
+  });
+
+  // Mostrar el modal
+  const modalEl = document.getElementById('pedidoModal');
+  const modal = new bootstrap.Modal(modalEl);
+  modal.show();
 }
+
 
 async function obtenerProductos() {
   try {
@@ -260,6 +316,51 @@ async function obtenerUsuarios() {
   })
   document.getElementById(seccion).classList.add("active")
 }
+
+function abrirModalEstado(id, estadoActual) {
+  document.getElementById("estadoPedidoId").value = id;
+  document.getElementById("nuevoEstado").value = estadoActual;
+
+  const modal = new bootstrap.Modal(document.getElementById("modalEstado"));
+  modal.show();
+}
+
+async function guardarEstado() {
+  const id = document.getElementById("estadoPedidoId").value;
+  const estado = document.getElementById("nuevoEstado").value;
+
+  const formData = new FormData();
+  formData.append("seccion", "pedido_estado");
+  formData.append("id_pedido", id);
+  formData.append("estado", estado);
+
+  try {
+    const response = await fetch(API_URL + "?seccion=pedido_estado", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      alert("Error: " + data.message);
+      return;
+    }
+
+    alert("Estado actualizado correctamente");
+
+    // Actualizar la tabla
+    obtenerPedidos();
+
+    // Cerrar modal
+    bootstrap.Modal.getInstance(document.getElementById("modalEstado")).hide();
+
+  } catch (error) {
+    console.error("Error al actualizar estado:", error);
+    alert("Error al conectarse con el servidor");
+  }
+}
+
 
 // Ejecutar al cargar la página
 // Preview de imagen

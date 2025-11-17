@@ -63,5 +63,24 @@ class Producto {
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
+
+// En el modelo
+public function agregarReseña($id_producto, $id_usuario, $puntuacion, $comentario, $fecha) {
+    $puntuacion = (int)$puntuacion;
+if ($puntuacion < 1 || $puntuacion > 10) throw new Exception("Puntuación inválida");
+    $stmt = $this->pdo->prepare("
+        INSERT INTO reseña (id_producto, id_usuario, puntuacion, comentario, fecha) 
+        VALUES (:id_producto, :id_usuario, :puntuacion, :comentario, :fecha)
+    ");
+
+    $stmt->bindValue(':id_producto', (int)$id_producto, PDO::PARAM_INT);
+    $stmt->bindValue(':id_usuario', (int)$id_usuario, PDO::PARAM_INT);
+    $stmt->bindValue(':puntuacion', (int)$puntuacion, PDO::PARAM_INT);
+    $stmt->bindValue(':comentario', $comentario, PDO::PARAM_STR);
+    $stmt->bindValue(':fecha', $fecha, PDO::PARAM_STR);
+
+    return $stmt->execute();
+}
+
 }
 ?>
