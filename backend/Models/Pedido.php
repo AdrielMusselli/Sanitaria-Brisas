@@ -103,11 +103,14 @@ class Pedido {
     }
 
 
-function eliminarPedido($id_pedido) {
+
+
+    function eliminarPedido($id_pedido) {
     global $pedidoModel;
     $stmt = $pedidoModel->pdo->prepare("DELETE FROM pedido WHERE id_pedido = :id_pedido");
     $stmt->bindParam(':id_pedido', $id_pedido, PDO::PARAM_INT);
     return $stmt->execute();
 }
-}
+    }
+
 ?>

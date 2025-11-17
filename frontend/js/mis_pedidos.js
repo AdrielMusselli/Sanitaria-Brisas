@@ -230,7 +230,6 @@ document.addEventListener("click", async (e) => {
     }
 
     try {
-        console.log("Puntuación enviada:", puntuacion, typeof puntuacion);
         const res = await fetch(`${API_BASE}?seccion=resena`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -245,6 +244,7 @@ document.addEventListener("click", async (e) => {
         const data = await res.json();
 
         if (data.success) {
+            alert("¡Reseña enviada correctamente!");
             btn.textContent = "Enviado";
             container.querySelector(".comentario").disabled = true;
             btn.disabled = true;

@@ -176,15 +176,15 @@ if ($requestMethod == "POST") {
     try {
         $input = json_decode(file_get_contents('php://input'), true);
 
-        $id_usuario  = intval($input['id_usuario'] ?? 0);
-        $id_producto = intval($input['id_producto'] ?? 0);
-        $puntuacion  = intval($input['puntuacion'] ?? 0);
-        $comentario  = trim($input['comentario'] ?? '');
+        $id_usuario  = isset($input['id_usuario']) ? intval($input['id_usuario']) : null;
+        $id_producto = isset($input['id_producto']) ? intval($input['id_producto']) : null;
+        $puntuacion  = isset($input['puntuacion']) ? intval($input['puntuacion']) : null;
+        $comentario  = isset($input['comentario']) ? trim($input['comentario']) : '';
 
-        if (!$id_usuario || !$id_producto || $puntuacion < 1 || $puntuacion > 10) {
+        if (!$id_usuario || !$id_producto || !$puntuacion || $puntuacion < 1 || $puntuacion > 10) {
             echo json_encode([
                 "success" => false,
-                "message" => "Parámetros inválidos",
+                "message" => "Parámetros inválidos o faltantes",
                 "debug" => $input
             ]);
             exit;
@@ -193,21 +193,12 @@ if ($requestMethod == "POST") {
         $fecha = date('Y-m-d H:i:s');
 
         if (agregarReseña($id_producto, $id_usuario, $puntuacion, $comentario, $fecha)) {
-            echo json_encode([
-                "success" => true,
-                "message" => "Reseña agregada exitosamente"
-            ]);
+            echo json_encode(["success" => true, "message" => "Reseña agregada exitosamente"]);
         } else {
-            echo json_encode([
-                "success" => false,
-                "message" => "Error al agregar la reseña"
-            ]);
+            echo json_encode(["success" => false, "message" => "Error al agregar la reseña"]);
         }
-
-        exit;
-
     } catch (Exception $e) {
-
+        // Evitar caracteres que rompan JSON
         $msg = preg_replace('/[^(\x20-\x7F)]*/','', $e->getMessage());
 
         echo json_encode([
@@ -215,7 +206,6 @@ if ($requestMethod == "POST") {
             "message" => "Error interno del servidor",
             "error" => $msg
         ]);
-        exit;
     }
     break;
 

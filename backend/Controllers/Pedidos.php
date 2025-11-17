@@ -45,6 +45,7 @@ function eliminarPedido($id_pedido) {
     } else {
         echo json_encode(["success" => false, "message" => "Error al eliminar el pedido"]);
     }
+
 }
 
 
@@ -66,3 +67,6 @@ function obtenerDetallesPedido($id_pedido) {
         "detalles" => $detalles ?: []
     ]);
 }
+
+
+?>
