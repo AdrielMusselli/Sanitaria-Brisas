@@ -338,4 +338,66 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (productoData) addToCart(productoData);
     });
   }
+
+  cargarResenas();
 });
+
+// ============================
+// Cargar Reseñas del Producto
+// ============================
+async function cargarResenas() {
+    const container = document.getElementById("reviews-container");
+    if (!container) return;
+
+    container.innerHTML = `<p class="text-muted">Cargando reseñas...</p>`;
+
+    try {
+        const res = await fetch(`http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=resenas&id_producto=${producto.id_producto}`);
+        if (!res.ok) throw new Error("Error HTTP " + res.status);
+
+        const data = await res.json();
+
+        console.log("📄 Reseñas recibidas:", data);
+
+        if (!Array.isArray(data) || data.length === 0) {
+            container.innerHTML = `<p class="text-muted">Este producto aún no tiene reseñas.</p>`;
+            return;
+        }
+
+        container.innerHTML = "";
+
+        data.forEach(r => {
+            const estrellas = generarEstrellas(r.puntuacion);
+
+            const item = document.createElement("div");
+            item.classList.add("review-item", "mb-3");
+            item.innerHTML = `
+                <div class="review-header d-flex justify-content-between">
+                    <div>
+                       <div class="reviewer-name">${r.nombre_usuario}</div>
+                        <div class="stars text-warning">${estrellas}</div>
+                    </div>
+                    <div class="review-date">${r.fecha || ""}</div>
+                </div>
+                <p>${r.comentario || "Sin comentario."}</p>
+            `;
+            container.appendChild(item);
+        });
+
+    } catch (err) {
+        console.error("❌ Error cargando reseñas:", err);
+        container.innerHTML = `<p class="text-danger">No se pudieron cargar las reseñas.</p>`;
+    }
+}
+
+// Generar estrellas HTML según puntuación
+function generarEstrellas(num) {
+    num = Number(num) || 0;
+    let html = "";
+    for (let i = 1; i <= 5; i++) {
+        html += `<i class="fas fa-star${i > num ? '-o' : ''}"></i>`;
+    }
+    return html;
+}
+
+

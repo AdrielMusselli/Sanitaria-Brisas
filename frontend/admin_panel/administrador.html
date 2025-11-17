@@ -39,6 +39,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="#" data-section="reseñas">
+                    <i class="fas fa-star me-2"></i>Reseñas
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="#" data-section="agregar">
                     <i class="fas fa-plus-circle me-2"></i>Agregar Producto
                 </a>
@@ -58,6 +63,7 @@
                             <th>Categoría</th>
                             <th>Precio</th>
                             <th>Descripción</th>
+                            <th>Stock</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -68,29 +74,71 @@
             </div>
         </section>
 
-        <!-- Pedidos Section -->
-        <section id="pedidos" class="content-section">
-            <h3 class="mb-3">Lista de Pedidos</h3>
+ <!-- Pedidos Section -->
+<section id="pedidos" class="content-section">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Lista de Pedidos</h3>
 
+        <!-- Filtros alineados a la derecha -->
+        <div class="d-flex gap-2">
+
+            <select id="filtroEstado" class="form-select" style="max-width: 200px;">
+                <option value="">Todos los estados</option>
+                <option value="en proceso">En proceso</option>
+                <option value="enviado">Enviado</option>
+                <option value="entregado">Entregado</option>
+                <option value="cancelado">Cancelado</option>
+            </select>
+
+            <input type="number" id="filtroUsuario" class="form-control" 
+                   placeholder="Filtrar por ID de usuario" style="max-width: 220px;">
+
+            <button class="btn btn-primary" onclick="filtrarPedidos()">Filtrar</button>
+            <button class="btn btn-secondary" onclick="limpiarFiltros()">Limpiar</button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped" id="tablaPedidos">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Dirección</th>
+                    <th>Precio Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los pedidos se cargarán aquí desde la API -->
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section id="reseñas" class="content-section">
+            <h3 class="mb-3">Reseñas</h3>
+            
             <div class="table-responsive">
-                <table class="table table-striped" id="tablaPedidos">
+                <table class="table table-striped" id="tablaResenas">
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Producto</th>
                             <th>Usuario</th>
+                            <th>Calificación</th>
+                            <th>Comentario</th>
                             <th>Fecha</th>
-                            <th>Estado</th>
-                            <th>Dirección</th>
-                            <th>Precio Total</th>
-                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Los pedidos se cargarán aquí desde la API -->
+                        <!-- Las reseñas se cargarán aquí desde la API -->
                     </tbody>
                 </table>
             </div>
-        </section>
+</section>
 
         <!-- Agregar Producto Section -->
         <section id="agregar" class="content-section">

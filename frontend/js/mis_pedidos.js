@@ -106,8 +106,8 @@ function renderizarPedidosPorEstado(pedidos) {
         if (!document.getElementById(tab).hasChildNodes()) {
             document.getElementById(tab).innerHTML = `
                 <div class="text-center text-muted py-5">
-                    <i class="fas fa-box-open fa-2x mb-3"></i>
-                    <p>No hay pedidos en esta categoría.</p>
+                    <i class="fas fa-box-open fa-3x mb-3"></i>
+                    <h5>No hay pedidos en esta categoría.</h5>
                 </div>`;
         }
     });
@@ -171,7 +171,7 @@ function crearFormularioResena(detalles) {
             <h6>Reseña para: ${d.nombre_producto}</h6>
             
             <div class="star-rating mb-2" data-producto-id="${d.id_producto_real}">
-                ${[...Array(10)].map((_, i) => `<i class="far fa-star" data-value="${i+1}"></i>`).join("")}
+                ${[...Array(5)].map((_, i) => `<i class="far fa-star" data-value="${i+1}"></i>`).join("")}
             </div>
 
             <textarea class="form-control mb-2 comentario" rows="2" placeholder="Escribe tu reseña..."></textarea>
@@ -223,13 +223,14 @@ document.addEventListener("click", async (e) => {
         return;
     }
 
-    if (!puntuacion || puntuacion < 1 || puntuacion > 10) {
-        alert("Selecciona una puntuación entre 1 y 10");
+    if (!puntuacion || puntuacion < 1 || puntuacion > 5) {
+        alert("Selecciona una puntuación entre 1 y 5 estrellas");
         btn.disabled = false;
         return;
     }
 
     try {
+        console.log("Puntuación enviada:", puntuacion, typeof puntuacion);
         const res = await fetch(`${API_BASE}?seccion=resena`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -237,14 +238,13 @@ document.addEventListener("click", async (e) => {
                 id_usuario: usuarioId,
                 id_producto: productoId,
                 comentario: comentario,
-                puntuacion: puntuacion // número entero
+                puntuacion: puntuacion
             }),
         });
 
         const data = await res.json();
 
         if (data.success) {
-            alert("¡Reseña enviada correctamente!");
             btn.textContent = "Enviado";
             container.querySelector(".comentario").disabled = true;
             btn.disabled = true;

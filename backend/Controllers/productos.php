@@ -57,10 +57,24 @@ register_shutdown_function(function() {
 
 function agregarReseña($id_producto, $id_usuario, $puntuacion, $comentario, $fecha) {
     global $productoModel;
-    if ($productoModel->agregarReseña($id_producto, $id_usuario, $puntuacion, $comentario, $fecha)) {
-        echo json_encode(["success" => true, "message" => "Reseña agregada exitosamente"]);
+    return $productoModel->agregarReseña($id_producto, $id_usuario, $puntuacion, $comentario, $fecha);
+}
+
+function reseñas() {
+    global $productoModel;
+    $respuesta = $productoModel->obtenerTodasLasReseñas();
+    echo json_encode($respuesta);
+}
+
+
+
+function obtenerReseñas() {
+    global $productoModel;
+    $id_producto = $_GET['id_producto'] ?? null;
+    if ($id_producto) {
+        echo json_encode($productoModel->obtenerReseñasPorProducto($id_producto));
     } else {
-        echo json_encode(["success" => false, "message" => "Error al agregar la reseña"]);
+        echo json_encode([]);
     }
 }
 ?>

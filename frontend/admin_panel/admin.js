@@ -36,6 +36,51 @@ async function obtenerPedidos() {
   }
 }
 
+async function obtenerResenas() {
+  try {
+    const response = await fetch("http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=resena", {
+      method: "GET",
+      });
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Reseñas recibidas:", data);
+
+    renderizarResenas(data);
+
+  } catch (error) {
+    console.error("Error al obtener las reseñas:", error);
+  }
+}
+
+function renderizarResenas(data) {
+  const tbody = document.querySelector("#tablaResenas tbody");
+
+  if (!tbody) return;
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No hay reseñas</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = data
+    .map(res => `
+      <tr>
+        <td>${res.id_reseña}</td>
+        <td>${res.id_producto}</td>
+        <td>${res.id_usuario}</td>
+        <td>${res.puntuacion || "-"}</td>
+        <td>${res.comentario || ""}</td>
+        <td>${res.fecha || ""}</td>
+      </tr>
+    `)
+    .join("");
+}
+
+
 function renderizarPedidos(data) {
   const tbody = document.querySelector("#tablaPedidos tbody");
 
@@ -62,6 +107,10 @@ function renderizarPedidos(data) {
 
   <button class="btn btn-sm btn-warning" onclick="abrirModalEstado(${pedido.id_pedido}, '${pedido.estado}')">
     <i class="fas fa-edit"></i>
+  </button>
+
+  <button class="btn btn-sm btn-danger ms-1" onclick="eliminarPedido(${pedido.id_pedido})">
+    <i class="fas fa-trash"></i>
   </button>
 </td>
       </tr>
@@ -212,6 +261,7 @@ function renderizarProductos(data) {
           <td>${producto.categoria}</td>
           <td>$${Number.parseFloat(producto.precio).toFixed(2)}</td>
           <td>${producto.descripcion || ''}</td>
+          <td>${producto.stock || '0'}</td>
           <td>
             <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${producto.id_producto})">
               <i class="fas fa-trash"></i>
@@ -282,6 +332,35 @@ async function eliminarProducto(id) {
     alert("Error de conexión con el servidor")
   }
 }
+
+async function eliminarPedido(id) {
+    if (!confirm("¿Estás seguro de eliminar este pedido?")) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost/Sanitaria-Brisas/backend/Api/api.php?seccion=pedido&id=${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert("Pedido eliminado correctamente");
+            obtenerPedidos(); // Recarga la tabla
+        } else {
+            alert("Error al eliminar el pedido: " + (data.message || "Error desconocido"));
+        }
+
+    } catch (error) {
+        console.error("Error eliminando pedido:", error);
+        alert("Ocurrió un error al eliminar el pedido.");
+    }
+}
+
 
 async function obtenerUsuarios() {
   try {
@@ -392,6 +471,33 @@ document.getElementById('imagenes')?.addEventListener('change', function(e) {
     reader.readAsDataURL(file);
 });
 
+function filtrarPedidos() {
+  const estadoFiltro = document.getElementById("filtroEstado").value.trim().toLowerCase();
+  const usuarioFiltro = document.getElementById("filtroUsuario").value.trim();
+
+  if (!window.pedidos) return;
+
+  const filtrados = window.pedidos.filter(p => {
+    const coincideEstado =
+      !estadoFiltro || (p.estado && p.estado.toLowerCase() === estadoFiltro);
+
+    const coincideUsuario =
+      !usuarioFiltro || Number(p.id_usuario) === Number(usuarioFiltro);
+
+    return coincideEstado && coincideUsuario;
+  });
+
+  renderizarPedidos(filtrados);
+}
+function limpiarFiltros() {
+  document.getElementById("filtroEstado").value = "";
+  document.getElementById("filtroUsuario").value = "";
+  renderizarPedidos(window.pedidos);
+}
+
+document.getElementById("filtroEstado").addEventListener("change", filtrarPedidos);
+document.getElementById("filtroUsuario").addEventListener("input", filtrarPedidos);
 document.addEventListener("DOMContentLoaded", obtenerPedidos);
 document.addEventListener("DOMContentLoaded", obtenerProductos);
 document.addEventListener("DOMContentLoaded", obtenerUsuarios);
+document.addEventListener("DOMContentLoaded", obtenerResenas);

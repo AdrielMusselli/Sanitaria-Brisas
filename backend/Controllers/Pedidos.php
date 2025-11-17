@@ -38,6 +38,15 @@ function agregarPedido() {
     echo json_encode($resultado);
 }
 
+function eliminarPedido($id_pedido) {
+    global $pedidoModel;
+    if ($pedidoModel->eliminarPedido($id_pedido)) {
+        echo json_encode(["success" => true, "message" => "Pedido eliminado exitosamente"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Error al eliminar el pedido"]);
+    }
+}
+
 
 function obtenerDetallesPedido($id_pedido) {
     global $pedidoModel;

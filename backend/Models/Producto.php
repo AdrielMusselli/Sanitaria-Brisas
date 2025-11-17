@@ -82,5 +82,27 @@ if ($puntuacion < 1 || $puntuacion > 10) throw new Exception("Puntuación invál
     return $stmt->execute();
 }
 
+public function obtenerTodasLasReseñas() {
+    $stmt = $this->pdo->prepare("SELECT * FROM reseña ORDER BY fecha DESC");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+public function obtenerReseñasPorProducto($id_producto) {
+    $sql = "
+        SELECT r.*, u.nombre AS nombre_usuario
+        FROM reseña r
+        INNER JOIN usuario u ON r.id_usuario = u.id_usuario
+        WHERE r.id_producto = :id_producto
+        ORDER BY r.fecha DESC
+    ";
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }
 ?>

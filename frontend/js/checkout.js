@@ -1,9 +1,13 @@
+// =========================
+// SELECCIÓN DE MÉTODO DE PAGO
+// =========================
 function selectPayment(element) {
   document.querySelectorAll('.payment-method').forEach(method => {
     method.classList.remove('active');
   });
+
   element.classList.add('active');
-  
+
   const radio = element.querySelector('input[type="radio"]');
   if (radio) radio.checked = true;
 
@@ -11,19 +15,23 @@ function selectPayment(element) {
   cardForm.style.display = element.querySelector('.fa-credit-card') ? 'block' : 'none';
 }
 
-// Formato número de tarjeta
+// =========================
+// FORMATO DE CAMPOS
+// =========================
 document.querySelector('input[placeholder="1234 5678 9012 3456"]')?.addEventListener('input', e => {
   let value = e.target.value.replace(/\s/g, '');
   e.target.value = value.match(/.{1,4}/g)?.join(' ') || value;
 });
 
-// Formato MM/AA
 document.querySelector('input[placeholder="MM/AA"]')?.addEventListener('input', e => {
-  let v = e.target.value.replace(/\D/g, '');
-  if (v.length >= 2) v = v.slice(0, 2) + '/' + v.slice(2, 4);
-  e.target.value = v;
+  let value = e.target.value.replace(/\D/g, '');
+  if (value.length >= 2) value = value.slice(0, 2) + '/' + value.slice(2, 4);
+  e.target.value = value;
 });
 
+// =========================
+// RENDER RESUMEN DE PRODUCTOS
+// =========================
 document.addEventListener("DOMContentLoaded", renderOrderSummary);
 
 function renderOrderSummary() {
@@ -67,8 +75,8 @@ function renderOrderSummary() {
     `);
   });
 
-  const envio = 15.00;
-  const impuestos = subtotal * 0.08;
+  const envio = 400;             // MISMO valor que carrito.js
+  const impuestos = subtotal * 0.21;
   const total = subtotal + envio + impuestos;
 
   subtotalElem.textContent = `$${subtotal.toFixed(2)}`;
@@ -77,6 +85,9 @@ function renderOrderSummary() {
   totalElem.textContent = `$${total.toFixed(2)}`;
 }
 
+// =========================
+// ARMADO DE PRODUCTOS PARA API
+// =========================
 function getProductosDelPedido() {
   let cart = {};
   try { cart = JSON.parse(localStorage.getItem("cart")) || {}; } catch { cart = {}; }
@@ -88,17 +99,53 @@ function getProductosDelPedido() {
   }));
 }
 
+// =========================
+// VALIDACIÓN MÉTODO TARJETA
+// =========================
+function validarTarjeta() {
+  const metodoTarjeta = document.querySelector('.payment-method.active .fa-credit-card');
+
+  if (!metodoTarjeta) return true; // No está pagando con tarjeta
+
+  const numero = document.querySelector('input[placeholder="1234 5678 9012 3456"]').value.trim();
+  const fecha = document.querySelector('input[placeholder="MM/AA"]').value.trim();
+  const cvv = document.querySelector('input[placeholder="123"]').value.trim();
+  const nombre = document.querySelector('input[placeholder="Nombre Completo"]').value.trim();
+
+  if (!numero || numero.length < 19) {
+    alert("Ingresa un número de tarjeta válido.");
+    return false;
+  }
+  if (!fecha || !/^\d{2}\/\d{2}$/.test(fecha)) {
+    alert("Ingresa una fecha de expiración válida (MM/AA).");
+    return false;
+  }
+  if (!cvv || cvv.length < 3) {
+    alert("Ingresa un CVV válido.");
+    return false;
+  }
+  if (!nombre) {
+    alert("Ingresa el nombre del titular de la tarjeta.");
+    return false;
+  }
+
+  return true;
+}
+
+// =========================
+// ENVIAR PEDIDO
+// =========================
 async function enviarPedido(e) {
   e.preventDefault();
 
-  const nombre = document.querySelector('input[name="nombre"]').value.trim();
-  const apellido = document.querySelector('input[name="apellido"]').value.trim();
   const direccion = document.querySelector('input[name="direccion"]').value.trim();
 
-  if (!nombre || !apellido || !direccion) {
-    alert("Por favor completa todos los campos de envío.");
+  if (!direccion) {
+    alert("Por favor ingresa una dirección de envío.");
     return;
   }
+
+  if (!validarTarjeta()) return;
 
   const productos = getProductosDelPedido();
   if (!productos.length) {
@@ -107,15 +154,16 @@ async function enviarPedido(e) {
   }
 
   const subtotal = productos.reduce((acc, p) => acc + p.precio_unitario * p.cantidad, 0);
-  const envio = 15.00;
-  const impuestos = subtotal * 0.08;
+  const envio = 400;
+  const impuestos = subtotal * 0.21;
   const total = subtotal + envio + impuestos;
+
   const fechaEnvio = new Date().toISOString().slice(0, 19).replace("T", " ");
 
   const fd = new FormData();
   fd.append("id_usuario", 1);
-  fd.append("estado", "Pendiente");
-  fd.append("direccion_envio", `${nombre} ${apellido} - ${direccion}`);
+  fd.append("estado", "en proceso");
+  fd.append("direccion_envio", direccion);
   fd.append("precio_total", total.toFixed(2));
   fd.append("fecha", fechaEnvio);
   fd.append("productos", JSON.stringify(productos));
@@ -139,6 +187,9 @@ async function enviarPedido(e) {
   }
 }
 
+// =========================
+// MODAL DE ÉXITO
+// =========================
 function mostrarModalExito() {
   const html = `
     <div class="modal fade" id="successModal" tabindex="-1">
@@ -176,4 +227,7 @@ function mostrarModalExito() {
   document.getElementById("successModal").addEventListener("hidden.bs.modal", redirigir);
 }
 
+// =========================
+// BOTÓN: ENVIAR PEDIDO
+// =========================
 document.querySelector(".btn-primary-custom")?.addEventListener("click", enviarPedido);

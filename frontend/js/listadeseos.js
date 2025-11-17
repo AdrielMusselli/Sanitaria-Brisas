@@ -73,7 +73,7 @@ function mostrarFavoritos(filtro = 'todos', orden = 'reciente') {
     contenedor.innerHTML = `
       <div class="col-12 text-center py-5">
         <i class="fas fa-heart-broken" style="font-size: 64px; color: #ccc;"></i>
-        <h3 class="mt-3 text-muted">No tienes productos en tu lista de deseos</h3>
+        <h3 class="mt-3 text-muted">No hay productos en esta categoria</h3>
         <p class="text-muted">Agrega productos desde la tienda</p>
         <a href="index.html" class="btn btn-primary mt-3">
           <i class="fas fa-shopping-bag me-2"></i>Ir a la tienda
